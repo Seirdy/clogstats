@@ -13,7 +13,7 @@ def parse_args() -> argparse.Namespace:
         "--duration",
         help="start analyzing messages from DURATION hours ago",
         action="store",
-        type=int,
+        type=float,
         default=24,
         required=False,
     )
@@ -40,12 +40,14 @@ def parse_args() -> argparse.Namespace:
 
 def main():
     """Run weestats from the CLI and dump the results."""
-    # collect the stats
+    # get user-supplied parameters
     args = parse_args()
     end_time = datetime.now()
     start_time = end_time - timedelta(hours=args.duration)
     date_range = DateRange(start_time=start_time, end_time=end_time)
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
+
+    # collect the stats
     collected_stats = analyze_all_logs(date_range)
 
     # display total message count
