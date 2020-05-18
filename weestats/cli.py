@@ -7,7 +7,9 @@ from weestats.gather_stats import DateRange, analyze_all_logs
 
 def parse_args() -> argparse.Namespace:
     """Parse CLI options."""
-    parser = argparse.ArgumentParser(description="Gather statistics from WeeChat log files.")
+    parser = argparse.ArgumentParser(
+        description="Gather statistics from WeeChat log files."
+    )
     parser.add_argument(
         "-d",
         "--duration",
@@ -33,6 +35,14 @@ def parse_args() -> argparse.Namespace:
         action="store",
         type=int,
         default=0,
+        required=False,
+    )
+    parser.add_argument(
+        "--max-topwords",
+        help="limit topwords to this many nicks",
+        action="store",
+        type=int,
+        default=3,
         required=False,
     )
     return parser.parse_args()
@@ -66,12 +76,15 @@ def main():
             ", ".join(
                 (
                     f"{nick}: {score}"
-                    for nick, score in channel.nick_counts.most_common(3)
+                    for nick, score in channel.nick_counts.most_common(
+                        args.max_topwords
+                    )
                 )
             ),
         )
         for ranking, channel in enumerate(collected_stats, start=1)
-        if channel.total_msgs >= args.min_activity and (args.num is None or ranking <= args.num)
+        if channel.total_msgs >= args.min_activity
+        and (args.num is None or ranking <= args.num)
     ]
     full_table = [COLUMN_HEADINGS] + table_rows
     # pretty-print that table with aligned columns; like `column -t` from BSD and util-linux

@@ -46,7 +46,7 @@ Usage
 -----
 
 ``` text
-usage: weestats [-h] [-d DURATION] [-n NUM] [-m MIN_ACTIVITY]
+usage: weestats [-h] [-d DURATION] [-n NUM] [-m MIN_ACTIVITY] [--max-topwords MAX_TOPWORDS]
 
 Gather statistics from WeeChat log files.
 
@@ -57,6 +57,8 @@ optional arguments:
   -n NUM, --num NUM     limit output to the top NUM channels
   -m MIN_ACTIVITY, --min-activity MIN_ACTIVITY
                         limit output to channels with at least this many messages.
+  --max-topwords MAX_TOPWORDS
+                        limit topwords to this many nicks
 ```
 
 Example
