@@ -80,8 +80,8 @@ optional arguments:
                         list of channels to exclude. format: "network.#channel"
 ```
 
-Example
--------
+Examples
+--------
 
 Print the 10 most active IRC channels from the past 24 hours that have at least 40
 chatters, along with the top 4 most active nicks per channel:
@@ -107,6 +107,25 @@ RANK CHANNEL              MSGS NICKS TOPWORDS
 9.   freenode.##chat      1444 54    mijowh_: 184, Gus_van_Ekelenbu: 165, yuken: 128, jordansinn: 114
 10.  ircnet.#worldchat    1241 53    Miri: 238, rud0lf: 121, Flowergirl42: 78, FinFury: 72
 ```
+
+Another example: say I finished an anime episode that just came out and want to talk
+about it. Weestats can filter my anime channels to just those that were active in the
+past 30 minutes:
+
+``` sh
+weestats -d 0.5 --include-channels "freenode.##anime" "freenode.#anime" "freenode.#reddit-anime" "quakenet.#anime" "rizon.#anime" "tilde_chat.#anime" --sort-by msgs --min-activity 1
+```
+
+Output:
+
+``` text
+Analyzing logs from 2020-05-18 16:03:07.055394 till 2020-05-18 16:33:07.055394
+total messages: 58
+RANK CHANNEL         MSGS NICKS TOPWORDS                               
+1.   freenode.#anime 58   11    MootPoot: 18, BillyZane: 11, S_T_A_N: 8
+```
+
+Looks like `freenode.#anime` was the only one with recent activity.
 
 License
 -------

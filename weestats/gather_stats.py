@@ -5,7 +5,7 @@ from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import (Container, Counter, Iterator, List, NamedTuple, Optional,
+from typing import (Collection, Counter, Iterator, List, NamedTuple, Optional,
                     Tuple)
 
 from weestats.parse import IRCMessage
@@ -74,9 +74,7 @@ def analyze_log(path: Path, date_range: DateRange) -> IRCChannel:
             prev_nick = message.nick
             topwords[message.nick] += 1
             msgs += 1
-    return IRCChannel(
-        name=name, topwords=topwords, nicks=len(topwords), msgs=msgs,
-    )
+    return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs,)
 
 
 def analyze_log_wrapper(args: Tuple[Path, DateRange]) -> IRCChannel:
@@ -88,13 +86,17 @@ def analyze_log_wrapper(args: Tuple[Path, DateRange]) -> IRCChannel:
 
 
 def analyze_all_logs(
-        date_range: DateRange, exclude_channels: Container[str] = (), sortkey: str = 'msgs'
+    date_range: DateRange,
+    include_channels: Collection[str] = (),
+    exclude_channels: Collection[str] = (),
+    sortkey: str = "msgs",
 ) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
     analyze_log_args = (
         (path, date_range)
         for path in log_paths()
         if path.name[4:-11] not in exclude_channels
+        and (len(include_channels) == 0 or path.name[4:-11] in include_channels)
     )
     with Pool() as pool:
         return sorted(
