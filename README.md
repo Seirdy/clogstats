@@ -19,8 +19,13 @@ handling.
 Dependencies
 ------------
 
-Weestats only depends on the Python standard library. It supports CPython 3.6+ and
-PyPy3 7.3+.
+Weestats supports CPython 3.6+ and PyPy3 7.3+.
+
+Python 3.7+: no 3rd-party dependencies.
+
+Python 3.6: the only 3rd-party dependency is [a
+backport](https://pypi.org/project/dataclasses/) of Python 3.7's `dataclasses`
+library.
 
 Installation
 ------------
@@ -53,7 +58,7 @@ each channel.
 Full usage:
 
 ``` text
-usage: weestats [-h] [-d DURATION] [-n NUM] [-m MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [--sort-by {msgs,nicks}]
+usage: weestats [-h] [-d DURATION] [-n NUM] [--min-activity MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [-s {msgs,nicks}]
                 [--exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]]
 
 Gather statistics from WeeChat log files.
@@ -63,13 +68,13 @@ optional arguments:
   -d DURATION, --duration DURATION
                         start analyzing messages from DURATION hours ago
   -n NUM, --num NUM     limit output to the top NUM channels
-  -m MIN_ACTIVITY, --min-activity MIN_ACTIVITY
+  --min-activity MIN_ACTIVITY
                         limit output to channels with at least MIN_ACTIVITY messages.
   --min-nicks MIN_NICKS
                         limit output to channels with at least MIN_NICKS nicks
   --max-topwords MAX_TOPWORDS
                         show the nicks and message counts for the MAX_TOPWORDS most active nicks
-  --sort-by {msgs,nicks}
+  -s {msgs,nicks}, --sort-by {msgs,nicks}
                         key to sort channels by
   --exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]
                         list of channels to exclude. format: "network.#channel"
@@ -78,23 +83,29 @@ optional arguments:
 Example
 -------
 
-Print the most active IRC channels from the past 12 hours:
+Print the 10 most active IRC channels from the past 24 hours that have at least 40
+chatters, along with the top 4 most active nicks per channel:
+
+``` sh
+$ weestats -n 10 --sort-by msgs -d 24 --min-nicks 40 --max-topwords 4
+```
+
+Output:
 
 ``` text
-$ weestats -d 12 -n 10
-Analyzing logs from 2020-05-16 03:07:28.351300 till 2020-05-16 15:07:28.351300
-total messages: 19641
-RANK CHANNEL           MSGS TOPWORDS
-1.   snoonet.#gnulag   2400 browndawg: 384, MrNeon: 228, crystalmett: 226
-2.   freenode.#python  1715 bjs: 246, ChrisWarrick: 150, nedbat: 89
-3.   freenode.##linux  1464 noodlepie: 227, rascul: 107, MrElendig: 97
-4.   efnet.#lrh        1371 Dwaine: 371, darkfader: 148, aids: 148
-5.   rizon.#chat       1367 dufferz: 187, Moo-Bun: 151, Frogorg: 134
-6.   tilde_chat.#meta  1185 kumquat: 186, jan6: 181, tomasino: 131
-7.   ircnet.#worldchat 1075 DeusPrometheus: 150, ob1: 132, l3mv: 77
-8.   freenode.#music   734  murthy: 242, nativetexan: 168, FireSword: 106
-9.   2600net.#2600     728  snowice0: 138, maestro: 112, oxagast: 89
-10.  freenode.#anime   711  ImoutoBot: 80, amigojapan: 78, Fenderbassist: 72
+Analyzing logs from 2020-05-17 15:40:40.375215 till 2020-05-18 15:40:40.375215
+total messages: 37955
+RANK CHANNEL              MSGS NICKS TOPWORDS
+1.   tilde_chat.#meta     4072 58    kumquat: 517, jan6: 474, brendo: 332, cyberia: 267
+2.   freenode.##linux     3418 181   FloridaMan: 268, pjt_014: 179, quartz12: 173, lukey: 173
+3.   snoonet.#gnulag      3122 49    browndawg: 596, RadiantBastard: 239, k33k: 209, audron: 200
+4.   freenode.#python     2298 144   grym: 144, celphi: 130, graingert: 121, _habnabit: 110
+5.   freenode.#anime      2231 47    sentionics: 308, amigojapan: 256, ImoutoBot: 248, dfch: 230
+6.   efnet.#lrh           2143 80    Dwaine: 352, rondito: 284, WeEatnKid: 101, aids: 88
+7.   rizon.#chat          1665 60    DORKMUND: 179, Frogorg: 119, Piba: 116, sushi-chan: 113
+8.   quakenet.#quarantine 1635 56    chenko: 228, olli: 222, redzain: 180, toxik: 141
+9.   freenode.##chat      1444 54    mijowh_: 184, Gus_van_Ekelenbu: 165, yuken: 128, jordansinn: 114
+10.  ircnet.#worldchat    1241 53    Miri: 238, rud0lf: 121, Flowergirl42: 78, FinFury: 72
 ```
 
 License
