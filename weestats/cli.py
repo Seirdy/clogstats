@@ -45,6 +45,15 @@ def parse_args() -> argparse.Namespace:
         default=3,
         required=False,
     )
+    parser.add_argument(
+        "--exclude-channels",
+        help='list of channels to exclude. format: "network.#channel"',
+        action="store",
+        type=str,
+        nargs="*",
+        default=set(),
+        required=False,
+    )
     return parser.parse_args()
 
 
@@ -58,7 +67,7 @@ def main():
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
     # collect the stats
-    collected_stats = analyze_all_logs(date_range)
+    collected_stats = analyze_all_logs(date_range, args.exclude_channels)
 
     # display total message count
     total_msgs_allchans = sum(channel.total_msgs for channel in collected_stats)

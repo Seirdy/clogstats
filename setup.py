@@ -23,5 +23,5 @@ setup(
     packages=["weestats"],
     license="AGPLv3+",
     python_requires=">=3.6",
-    entry_points={"console_scripts": ["weestats=weestats.cli:main"],},
+    entry_points={"console_scripts": ["weestats=weestats.cli:main"]},
 )

@@ -4,7 +4,7 @@ from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import Counter, Iterator, List, NamedTuple, Optional, Tuple
+from typing import Container, Counter, Iterator, List, NamedTuple, Optional, Tuple
 
 from weestats.parse import IRCMessage
 
@@ -74,13 +74,22 @@ def analyze_log(path: Path, date_range: DateRange) -> IRCChannel:
 
 
 def analyze_log_wrapper(args: Tuple[Path, DateRange]) -> IRCChannel:
-    """Run analyze_log on unpacked arguments."""
+    """Run analyze_log on unpacked arguments.
+
+    This is a global function to make it easier to parallelize.
+    """
     return analyze_log(*args)
 
 
-def analyze_all_logs(date_range: DateRange) -> List[IRCChannel]:
+def analyze_all_logs(
+    date_range: DateRange, exclude_channels: Container[str] = ()
+) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
-    analyze_log_args = ((path, date_range) for path in log_paths())
+    analyze_log_args = (
+        (path, date_range)
+        for path in log_paths()
+        if path.name[4:-11] not in exclude_channels
+    )
     with Pool() as pool:
         return sorted(
             pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
