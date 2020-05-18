@@ -23,5 +23,7 @@ setup(
     packages=["weestats"],
     license="AGPLv3+",
     python_requires=">=3.6",
+    # backport py3's dataclasses
+    install_requires=["dataclasses>=0.6; python_version < '3.7'"],
     entry_points={"console_scripts": ["weestats=weestats.cli:main"]},
 )

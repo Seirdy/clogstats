@@ -1,10 +1,12 @@
 """Components for reading WeeChat logs and gathering statistics from them."""
+from dataclasses import dataclass
 from datetime import datetime
 from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import Container, Counter, Iterator, List, NamedTuple, Optional, Tuple
+from typing import (Container, Counter, Iterator, List, NamedTuple, Optional,
+                    Tuple)
 
 from weestats.parse import IRCMessage
 
@@ -45,32 +47,36 @@ def log_reader(path: Path, date_range: DateRange) -> Iterator[IRCMessage]:
     return all_messages
 
 
-class IRCChannel(NamedTuple):
+@dataclass
+class IRCChannel:
     """IRCChannel holds the data extracted from a bunch of IRCMessages.
 
     It does not hold the entire log; it only holds extracted statistics.
     """
 
     name: str
-    nick_counts: Counter[str] = Counter()
-    total_msgs: int = 0
+    topwords: Counter[str]
+    nicks: int
+    msgs: int
 
 
 def analyze_log(path: Path, date_range: DateRange) -> IRCChannel:
     """Turn a path to a log file into an IRCChannel holding its stats."""
     # the values we'll extract to build the IRCChannel
     name = path.name[4:-11]  # strip off the "irc." prefix and ".weechatlog" suffix
-    total_msgs = 0
-    nick_counts: Counter[str] = Counter()
+    msgs = 0
+    topwords: Counter[str] = Counter()
     # save the previously-extracted nick as well. Use it to merge
     # multiple consecutive messages from the same nick.
     prev_nick: str = ""
     for message in log_reader(path, date_range):
         if message.nick is not None and message.nick != prev_nick:
             prev_nick = message.nick
-            nick_counts[message.nick] += 1
-            total_msgs += 1
-    return IRCChannel(name=name, nick_counts=nick_counts, total_msgs=total_msgs,)
+            topwords[message.nick] += 1
+            msgs += 1
+    return IRCChannel(
+        name=name, topwords=topwords, nicks=len(topwords), msgs=msgs,
+    )
 
 
 def analyze_log_wrapper(args: Tuple[Path, DateRange]) -> IRCChannel:
@@ -82,7 +88,7 @@ def analyze_log_wrapper(args: Tuple[Path, DateRange]) -> IRCChannel:
 
 
 def analyze_all_logs(
-    date_range: DateRange, exclude_channels: Container[str] = ()
+        date_range: DateRange, exclude_channels: Container[str] = (), sortkey: str = 'msgs'
 ) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
     analyze_log_args = (
@@ -93,6 +99,6 @@ def analyze_all_logs(
     with Pool() as pool:
         return sorted(
             pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
-            key=lambda channel: channel.total_msgs,
+            key=lambda channel: channel.__getattribute__(sortkey),
             reverse=True,
         )

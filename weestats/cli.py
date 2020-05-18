@@ -29,9 +29,16 @@ def parse_args() -> argparse.Namespace:
         required=False,
     )
     parser.add_argument(
-        "-m",
         "--min-activity",
-        help="limit output to channels with at least this many messages.",
+        help="limit output to channels with at least MIN_ACTIVITY messages.",
+        action="store",
+        type=int,
+        default=0,
+        required=False,
+    )
+    parser.add_argument(
+        "--min-nicks",
+        help="limit output to channels with at least MIN_NICKS nicks",
         action="store",
         type=int,
         default=0,
@@ -39,10 +46,20 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--max-topwords",
-        help="limit topwords to this many nicks",
+        help="show the nicks and message counts for the MAX_TOPWORDS most active nicks",
         action="store",
         type=int,
         default=3,
+        required=False,
+    )
+    parser.add_argument(
+        "-s",
+        "--sort-by",
+        help="key to sort channels by",
+        choices=["msgs", "nicks"],
+        action="store",
+        type=str,
+        default="msgs",
         required=False,
     )
     parser.add_argument(
@@ -66,34 +83,39 @@ def main():
     date_range = DateRange(start_time=start_time, end_time=end_time)
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
-    # collect the stats
-    collected_stats = analyze_all_logs(date_range, args.exclude_channels)
+    # collect the stats.
+    # convert args.exclude_channels to a set since we're just doing lookups.
+    collected_stats = analyze_all_logs(date_range, set(args.exclude_channels), sortkey=args.sort_by)
 
     # display total message count
-    total_msgs_allchans = sum(channel.total_msgs for channel in collected_stats)
-    print(f"total messages: {total_msgs_allchans}")
+    msgs_allchans = sum(channel.msgs for channel in collected_stats)
+    print(f"total messages: {msgs_allchans}")
 
     # make a table to display per-channel stats
-    COLUMN_HEADINGS = ("RANK", "CHANNEL", "MSGS", "TOPWORDS")
+    # filter channels
+    collected_stats = [
+        channel
+        for channel in collected_stats
+        if channel.msgs >= args.min_activity and channel.nicks >= args.min_nicks
+    ]
+    COLUMN_HEADINGS = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
     table_rows = [
         (
             # channel ranking when sorting channels by # of messages (descending)
             f"{ranking}.",
             channel.name,
-            str(channel.total_msgs),
+            str(channel.msgs),
+            str(channel.nicks),
             # TopWords: the top 3 most active members of a channel with their # of messages
             ", ".join(
                 (
                     f"{nick}: {score}"
-                    for nick, score in channel.nick_counts.most_common(
-                        args.max_topwords
-                    )
+                    for nick, score in channel.topwords.most_common(args.max_topwords)
                 )
             ),
         )
         for ranking, channel in enumerate(collected_stats, start=1)
-        if channel.total_msgs >= args.min_activity
-        and (args.num is None or ranking <= args.num)
+        if args.num is None or ranking <= args.num
     ]
     full_table = [COLUMN_HEADINGS] + table_rows
     # pretty-print that table with aligned columns; like `column -t` from BSD and util-linux

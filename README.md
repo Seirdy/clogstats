@@ -42,11 +42,19 @@ Flood mitigation measures include:
 Planned areas of improvement for flood mitigation primarily involve filtering out
 messages by user-configurable per-network regular expressions and nick blacklists.
 
-Usage
------
+Features and Usage
+------------------
+
+Weestats can sort channels by their number of messages or number of non-lurkers
+(i.e., the number of nicks that actually sent a message). It can also display the top
+most active nicks for each channel. It can also display the top most active nicks for
+each channel.
+
+Full usage:
 
 ``` text
-usage: weestats [-h] [-d DURATION] [-n NUM] [-m MIN_ACTIVITY] [--max-topwords MAX_TOPWORDS]
+usage: weestats [-h] [-d DURATION] [-n NUM] [-m MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [--sort-by {msgs,nicks}]
+                [--exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]]
 
 Gather statistics from WeeChat log files.
 
@@ -56,9 +64,15 @@ optional arguments:
                         start analyzing messages from DURATION hours ago
   -n NUM, --num NUM     limit output to the top NUM channels
   -m MIN_ACTIVITY, --min-activity MIN_ACTIVITY
-                        limit output to channels with at least this many messages.
+                        limit output to channels with at least MIN_ACTIVITY messages.
+  --min-nicks MIN_NICKS
+                        limit output to channels with at least MIN_NICKS nicks
   --max-topwords MAX_TOPWORDS
-                        limit topwords to this many nicks
+                        show the nicks and message counts for the MAX_TOPWORDS most active nicks
+  --sort-by {msgs,nicks}
+                        key to sort channels by
+  --exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]
+                        list of channels to exclude. format: "network.#channel"
 ```
 
 Example
