@@ -5,8 +5,7 @@ from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import (Collection, Counter, Iterator, List, NamedTuple, Optional,
-                    Tuple)
+from typing import Collection, Counter, Iterator, List, NamedTuple, Optional, Tuple
 
 from weestats.parse import IRCMessage
 

@@ -115,7 +115,9 @@ about it. Weestats can filter my anime channels to just those that were active i
 past 30 minutes:
 
 ``` sh
-weestats -d 0.5 --include-channels "freenode.##anime" "freenode.#anime" "freenode.#reddit-anime" "quakenet.#anime" "rizon.#anime" "tilde_chat.#anime" --sort-by msgs --min-activity 1
+weestats -d 0.5 --sort-by msgs --min-activity 1 --include-channels \
+	"freenode.##anime" "freenode.#anime" "freenode.#reddit-anime" \
+	"quakenet.#anime" "rizon.#anime" "tilde_chat.#anime"
 ```
 
 Output:
