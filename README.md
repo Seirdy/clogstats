@@ -42,10 +42,17 @@ Flood mitigation
 Mitigating the effects of spam and flooding continues to be an ongoing challenge.
 Flood mitigation measures include:
 
-- Merging consecutive messages from the same nick
+- Merging consecutive messages from the same nick.
+- Filtering out a small list of known bot nicks. This filtering happens on a
+  per-network basis and matches blacklisted nicks against a server name. This only
+  works if the server names in your WeeChat configs match the server names specified
+  by `BOT_BLACKLISTS` in `weestats/gather_stats.py`
 
 Planned areas of improvement for flood mitigation primarily involve filtering out
-messages by user-configurable per-network regular expressions and nick blacklists.
+messages by user-configurable per-network regular expressions and nick blacklists. I
+might automate generating nick blacklists with a WeeChat script that runs
+`/msg botserv botlist` on a list of IRC server buffers and saves the output to a
+file.
 
 Features and Usage
 ------------------
@@ -59,6 +66,7 @@ Full usage:
 ``` text
 usage: weestats [-h] [-d DURATION] [-n NUM] [--min-activity MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [-s {msgs,nicks}]
                 [--include-channels [INCLUDE_CHANNELS [INCLUDE_CHANNELS ...]]] [--exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]]
+                [--disable-bot-filters]
 
 Gather statistics from WeeChat log files.
 
@@ -79,6 +87,8 @@ optional arguments:
                         only analyze these channels. format: "network.#channel"
   --exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]
                         list of channels to exclude. format: "network.#channel"
+  --disable-bot-filters
+                        disable filtering of some known bots
 ```
 
 Examples
@@ -88,25 +98,25 @@ Print the 10 most active IRC channels from the past 24 hours that have at least 
 chatters, along with the top 4 most active nicks per channel:
 
 ``` sh
-$ weestats -n 10 --sort-by msgs -d 24 --min-nicks 40 --max-topwords 4
+weestats -n 10 --sort-by msgs -d 24 --min-nicks 40 --max-topwords 4
 ```
 
 Output:
 
 ``` text
-Analyzing logs from 2020-05-17 15:40:40.375215 till 2020-05-18 15:40:40.375215
-total messages: 37955
-RANK CHANNEL              MSGS NICKS TOPWORDS
-1.   tilde_chat.#meta     4072 58    kumquat: 517, jan6: 474, brendo: 332, cyberia: 267
-2.   freenode.##linux     3418 181   FloridaMan: 268, pjt_014: 179, quartz12: 173, lukey: 173
-3.   snoonet.#gnulag      3122 49    browndawg: 596, RadiantBastard: 239, k33k: 209, audron: 200
-4.   freenode.#python     2298 144   grym: 144, celphi: 130, graingert: 121, _habnabit: 110
-5.   freenode.#anime      2231 47    sentionics: 308, amigojapan: 256, ImoutoBot: 248, dfch: 230
-6.   efnet.#lrh           2143 80    Dwaine: 352, rondito: 284, WeEatnKid: 101, aids: 88
-7.   rizon.#chat          1665 60    DORKMUND: 179, Frogorg: 119, Piba: 116, sushi-chan: 113
-8.   quakenet.#quarantine 1635 56    chenko: 228, olli: 222, redzain: 180, toxik: 141
-9.   freenode.##chat      1444 54    mijowh_: 184, Gus_van_Ekelenbu: 165, yuken: 128, jordansinn: 114
-10.  ircnet.#worldchat    1241 53    Miri: 238, rud0lf: 121, Flowergirl42: 78, FinFury: 72
+Analyzing logs from 2020-05-18 15:58:14.626763 till 2020-05-19 15:58:14.626763
+total messages: 33146
+RANK CHANNEL                  MSGS NICKS TOPWORDS
+1.   tilde_chat.#meta         2897 63    kumquat: 417, jan6: 410, brendo: 207, ben: 130
+2.   snoonet.#gnulag          2838 50    browndawg: 592, ldlework: 172, mrneon: 140, iamidly: 134
+3.   freenode.##linux         2753 147   floridaman: 346, phogg: 245, rascul: 189, lukey: 85
+4.   freenode.#python         2491 145   corvus-corax: 214, snoopjedi: 191, teut: 167, _habnabit: 145
+5.   efnet.#lrh               2024 81    rondito: 349, jupedbird: 236, butth0le: 80, \\\\\: 77
+6.   freenode.#anime          1931 53    luke-jr: 198, amigojapan: 191, emmeka: 140, butternoodle: 129
+7.   ircnet.#worldchat        1233 62    kanasta: 118, flowergirl42: 104, miri: 97, klywilen: 97
+8.   quakenet.#quarantine     1149 51    olli: 149, redzain_: 142, chenko: 135, `sun357: 105
+9.   darkscience.#darkscience 992  44    workinggoose: 145, sun-light: 108, dijit: 76, exusser: 68
+10.  rizon.#chat              953  51    dorkmund: 113, dfx: 94, irish666: 84, piba: 70
 ```
 
 Another example: say I finished an anime episode that just came out and want to talk

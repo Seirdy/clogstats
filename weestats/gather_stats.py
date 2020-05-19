@@ -1,13 +1,37 @@
 """Components for reading WeeChat logs and gathering statistics from them."""
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import Collection, Counter, Iterator, List, NamedTuple, Optional, Tuple
+from typing import (
+    Collection,
+    Counter,
+    Dict,
+    Iterator,
+    List,
+    Mapping,
+    NamedTuple,
+    Optional,
+    Set,
+)
 
 from weestats.parse import IRCMessage
+
+BOT_BLACKLISTS: Dict[str, Set[str]] = {
+    "2600net": {"jarvis", "gbot"},
+    "darkscience": {"zeta"},
+    "efnet": {"pelosi"},
+    "freenode": {"mockturtle", "weebot", "imoutobot", "wlb1"},
+    "gitter": {"gitter"},
+    "gotham": {"mafalda", "southbay", "damon"},
+    "rizon": {"internets", "chanstat", "yt-info"},
+    "tilde_chat": {"bitbot"},
+    "snoonet": {"gonzobot", "jesi", "shinymetal", "subwatch", "nsa"},
+    "supernets": {"scroll", "cancer", "faggotxxx", "fuckyou"},
+}
 
 
 class DateRange(NamedTuple):
@@ -15,6 +39,9 @@ class DateRange(NamedTuple):
 
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
+
+
+CHANNEL_REGEX = re.compile(r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)")
 
 
 def log_paths() -> Iterator[Path]:
@@ -59,8 +86,18 @@ class IRCChannel:
     msgs: int
 
 
-def analyze_log(path: Path, date_range: DateRange) -> IRCChannel:
-    """Turn a path to a log file into an IRCChannel holding its stats."""
+def analyze_log(
+    path: Path, date_range: DateRange, nick_blacklist: Optional[Set[str]] = None
+) -> IRCChannel:
+    """Turn a path to a log file into an IRCChannel holding its stats.
+
+    This function takes multiple arguments, which makes calling it in a
+    single-variable multithreaded map() function tricky. It gets wrapped
+    by analyze_log_wrapper which unpacks a single arument into this
+    function.
+    """
+    if nick_blacklist is None:
+        nick_blacklist = set()
     # the values we'll extract to build the IRCChannel
     name = path.name[4:-11]  # strip off the "irc." prefix and ".weechatlog" suffix
     msgs = 0
@@ -69,33 +106,64 @@ def analyze_log(path: Path, date_range: DateRange) -> IRCChannel:
     # multiple consecutive messages from the same nick.
     prev_nick: str = ""
     for message in log_reader(path, date_range):
-        if message.nick is not None and message.nick != prev_nick:
-            prev_nick = message.nick
-            topwords[message.nick] += 1
+        # mypy false positives: the if-statement ensures that message.nick isn't None
+        if message.nick not in nick_blacklist.union({prev_nick, None}):  # type: ignore[arg-type]
+            prev_nick = message.nick  # type: ignore[assignment]
+            topwords[message.nick] += 1  # type: ignore[index]
             msgs += 1
     return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs,)
 
 
-def analyze_log_wrapper(args: Tuple[Path, DateRange]) -> IRCChannel:
+class AnalyzeLogArgs(NamedTuple):
+    """Conatiner for the args to unpack and pass to analyze_log."""
+
+    path: Path
+    date_range: DateRange
+    nick_blacklist: Set[str] = set()
+
+
+def analyze_log_wrapper(args: AnalyzeLogArgs) -> IRCChannel:
     """Run analyze_log on unpacked arguments.
 
     This is a global function to make it easier to parallelize.
     """
-    return analyze_log(*args)
+    return analyze_log(
+        path=args.path, date_range=args.date_range, nick_blacklist=args.nick_blacklist
+    )
 
 
 def analyze_all_logs(
     date_range: DateRange,
-    include_channels: Collection[str] = (),
-    exclude_channels: Collection[str] = (),
+    include_channels: Collection[str] = None,
+    exclude_channels: Collection[str] = None,
+    nick_blacklists: Mapping[str, Set[str]] = None,
     sortkey: str = "msgs",
 ) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
-    analyze_log_args = (
-        (path, date_range)
+    # set default values for optional arguments
+    if nick_blacklists is None:
+        nick_blacklists = BOT_BLACKLISTS
+
+    # set the arguments for each run of analyze_log_wrapper
+    # for all the channels we want to analyze
+    analyze_log_args: Iterator[AnalyzeLogArgs] = (
+        AnalyzeLogArgs(
+            path=path,
+            date_range=date_range,
+            nick_blacklist=nick_blacklists.get(
+                # mypy false positive: log_paths() filters paths against
+                # a glob equivalent to our regex; we are guaranteed a match.
+                CHANNEL_REGEX.search(path.name).group(1),  # type: ignore[union-attr]
+                set(),
+            ),
+        )
         for path in log_paths()
-        if path.name[4:-11] not in exclude_channels
-        and (len(include_channels) == 0 or path.name[4:-11] in include_channels)
+        if (exclude_channels is None or path.name[4:-11] not in exclude_channels)
+        and (
+            include_channels is None
+            or len(include_channels) == 0
+            or path.name[4:-11] in include_channels
+        )
     )
     with Pool() as pool:
         return sorted(

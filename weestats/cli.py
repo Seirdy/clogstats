@@ -1,6 +1,7 @@
 """The command-line interface for weestats."""
 import argparse
 from datetime import datetime, timedelta
+from typing import Collection, Dict, List, Optional, Set
 
 from weestats.gather_stats import DateRange, analyze_all_logs
 
@@ -80,6 +81,11 @@ def parse_args() -> argparse.Namespace:
         default=set(),
         required=False,
     )
+    parser.add_argument(
+        "--disable-bot-filters",
+        help="disable filtering of some known bots",
+        action="store_true",
+    )
     return parser.parse_args()
 
 
@@ -92,12 +98,17 @@ def main():
     date_range = DateRange(start_time=start_time, end_time=end_time)
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
+    nick_blacklists: Optional[Dict[str, Set[str]]] = None
+    if args.disable_bot_filters:
+        nick_blacklists = {}
+
     # collect the stats.
     # convert channels to include/exclude to sets for better lookup.
     collected_stats = analyze_all_logs(
         date_range=date_range,
         include_channels=set(args.include_channels),
         exclude_channels=set(args.exclude_channels),
+        nick_blacklists=nick_blacklists,
         sortkey=args.sort_by,
     )
 
@@ -112,8 +123,8 @@ def main():
         for channel in collected_stats
         if channel.msgs >= args.min_activity and channel.nicks >= args.min_nicks
     ]
-    COLUMN_HEADINGS = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
-    table_rows = [
+    column_headings = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
+    table_rows: List[Collection[str]] = [
         (
             # channel ranking when sorting channels by # of messages (descending)
             f"{ranking}.",
@@ -131,7 +142,7 @@ def main():
         for ranking, channel in enumerate(collected_stats, start=1)
         if args.num is None or ranking <= args.num
     ]
-    full_table = [COLUMN_HEADINGS] + table_rows
+    full_table = [column_headings] + table_rows
     # pretty-print that table with aligned columns; like `column -t` from BSD and util-linux
     column_widths = [max(map(len, col)) for col in zip(*full_table)]
     for line in full_table:

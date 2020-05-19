@@ -6,11 +6,7 @@ from typing import Optional
 
 # precompiled regexes
 _ANSI_ESCAPE = re.compile(r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]")
-_TIMESTAMP_REGEX = re.compile(
-    "^20[0-9].-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]"
-)
-DELIMITER = "\t"
-_TAB = re.compile(DELIMITER)
+_TAB = re.compile("\t")
 
 
 def escape_ansi(line: str) -> str:
@@ -80,4 +76,7 @@ class IRCMessage:
             # remove the nick prefix if it exists
             if self._nick[0] in {"+", "%", "@", "~", "&"}:
                 self._nick = self._nick[1:]
+            # make nick lowercase since IRC nicks with different case
+            # usually represent the same user.
+            self._nick = self._nick.lower()
             return self._nick
