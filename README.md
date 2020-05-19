@@ -59,7 +59,7 @@ Full usage:
 
 ``` text
 usage: weestats [-h] [-d DURATION] [-n NUM] [--min-activity MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [-s {msgs,nicks}]
-                [--exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]]
+                [--include-channels [INCLUDE_CHANNELS [INCLUDE_CHANNELS ...]]] [--exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]]
 
 Gather statistics from WeeChat log files.
 
@@ -76,6 +76,8 @@ optional arguments:
                         show the nicks and message counts for the MAX_TOPWORDS most active nicks
   -s {msgs,nicks}, --sort-by {msgs,nicks}
                         key to sort channels by
+  --include-channels [INCLUDE_CHANNELS [INCLUDE_CHANNELS ...]]
+                        only analyze these channels. format: "network.#channel"
   --exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]
                         list of channels to exclude. format: "network.#channel"
 ```
@@ -119,13 +121,15 @@ weestats -d 0.5 --include-channels "freenode.##anime" "freenode.#anime" "freenod
 Output:
 
 ``` text
-Analyzing logs from 2020-05-18 16:03:07.055394 till 2020-05-18 16:33:07.055394
-total messages: 58
-RANK CHANNEL         MSGS NICKS TOPWORDS                               
-1.   freenode.#anime 58   11    MootPoot: 18, BillyZane: 11, S_T_A_N: 8
+Analyzing logs from 2020-05-18 17:08:07.076732 till 2020-05-18 17:38:07.076732
+total messages: 66
+RANK CHANNEL         MSGS NICKS TOPWORDS
+1.   freenode.#anime 65   11    MootPoot: 16, emmeka: 13, ButterNoodle: 13
+2.   quakenet.#anime 1    1     Fanen: 1
 ```
 
-Looks like `freenode.#anime` was the only one with recent activity.
+Looks like the `#anime` channels on Freenode and QuakeNet are the only one with
+recent activity.
 
 License
 -------
