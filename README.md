@@ -52,8 +52,7 @@ Features and Usage
 
 Weestats can sort channels by their number of messages or number of non-lurkers
 (i.e., the number of nicks that actually sent a message). It can also display the top
-most active nicks for each channel. It can also display the top most active nicks for
-each channel.
+most active nicks for each channel.
 
 Full usage:
 
