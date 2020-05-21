@@ -6,17 +6,8 @@ from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import (
-    Collection,
-    Counter,
-    Dict,
-    Iterator,
-    List,
-    Mapping,
-    NamedTuple,
-    Optional,
-    Set,
-)
+from typing import (Collection, Counter, Dict, Iterator, List, Mapping,
+                    NamedTuple, Optional, Set)
 
 from weestats.parse import IRCMessage
 
@@ -44,15 +35,22 @@ class DateRange(NamedTuple):
 CHANNEL_REGEX = re.compile(r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)")
 
 
-def log_paths() -> Iterator[Path]:
-    """Get all the .weechatlog paths for the current user."""
+def log_paths(
+    exclude_channels: Collection[str] = None, include_channels: Collection[str] = None
+) -> Iterator[Path]:
+    """Get all the .weechatlog paths to analyze for the current user."""
     try:
         weechat_home = Path(environ["WEECHAT_HOME"])
     except KeyError:
         weechat_home = Path.home() / ".weechat"
     log_dir = weechat_home / "logs"
-    for file in log_dir.glob("irc.*.[#]*.weechatlog"):
-        yield file
+    for path in log_dir.glob("irc.*.[#]*.weechatlog"):
+        if (exclude_channels is None or path.name[4:-11] not in exclude_channels) and (
+            include_channels is None
+            or len(include_channels) == 0
+            or path.name[4:-11] in include_channels
+        ):
+            yield path
 
 
 def log_reader(path: Path, date_range: DateRange) -> Iterator[IRCMessage]:
@@ -157,13 +155,7 @@ def analyze_all_logs(
                 set(),
             ),
         )
-        for path in log_paths()
-        if (exclude_channels is None or path.name[4:-11] not in exclude_channels)
-        and (
-            include_channels is None
-            or len(include_channels) == 0
-            or path.name[4:-11] in include_channels
-        )
+        for path in log_paths(exclude_channels=exclude_channels, include_channels=include_channels)
     )
     with Pool() as pool:
         return sorted(
