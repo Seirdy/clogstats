@@ -7,7 +7,7 @@ from typing import Optional
 # precompiled regexes
 _ANSI_ESCAPE = re.compile(r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]")
 _TAB = re.compile("\t")
-NICK_PREFIXES={"+", "%", "@", "~", "&"}
+NICK_PREFIXES = {"+", "%", "@", "~", "&"}
 
 
 def escape_ansi(line: str) -> str:

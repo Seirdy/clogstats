@@ -6,8 +6,17 @@ from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import (Collection, Counter, Dict, Iterator, List, Mapping,
-                    NamedTuple, Optional, Set)
+from typing import (
+    Collection,
+    Counter,
+    Dict,
+    Iterator,
+    List,
+    Mapping,
+    NamedTuple,
+    Optional,
+    Set,
+)
 
 from weestats.parse import IRCMessage
 
@@ -53,11 +62,18 @@ def log_paths(
             yield path
 
 
+def read_all_lines(path: Path) -> Iterator[IRCMessage]:
+    """Lazily convert every line in a WeeChat log file to an IRCMessage."""
+    for row in path.open(mode="r", encoding="utf-8"):
+        try:
+            yield IRCMessage(row)
+        except ValueError:
+            raise ValueError("error reading log file " + str(path))
+
+
 def log_reader(path: Path, date_range: DateRange) -> Iterator[IRCMessage]:
-    """Read an IRCMessage from each line of a log file after start_time."""
-    all_messages: Iterator[IRCMessage] = (
-        IRCMessage(row) for row in path.open(mode="r", encoding="utf-8")
-    )
+    """Find all IRC messages within date_range for path."""
+    all_messages: Iterator[IRCMessage] = read_all_lines(path)
     if date_range.start_time is not None:
         all_messages = dropwhile(
             lambda message: message.timestamp <= date_range.start_time,  # type: ignore[operator]
@@ -155,7 +171,9 @@ def analyze_all_logs(
                 set(),
             ),
         )
-        for path in log_paths(exclude_channels=exclude_channels, include_channels=include_channels)
+        for path in log_paths(
+            exclude_channels=exclude_channels, include_channels=include_channels
+        )
     )
     with Pool() as pool:
         return sorted(
