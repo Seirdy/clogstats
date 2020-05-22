@@ -6,6 +6,7 @@ from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
+from sys import stderr
 from typing import (
     Collection,
     Counter,
@@ -63,12 +64,18 @@ def log_paths(
 
 
 def read_all_lines(path: Path) -> Iterator[IRCMessage]:
-    """Lazily convert every line in a WeeChat log file to an IRCMessage."""
+    """Lazily convert every line in a WeeChat log file to an IRCMessage.
+
+    Skips any line that fails to parse, alerting the user in stderr.
+    """
     for row in path.open(mode="r", encoding="utf-8"):
         try:
             yield IRCMessage(row)
-        except ValueError:
-            raise ValueError("error reading log file " + str(path))
+        except ValueError as error:
+            print(
+                "error reading log file " + str(path) + ": " + str(error) + "\033[0m",
+                file=stderr,
+            )
 
 
 def log_reader(path: Path, date_range: DateRange) -> Iterator[IRCMessage]:
