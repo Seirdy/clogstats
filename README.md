@@ -1,5 +1,5 @@
 clogstats
-========
+=========
 
 [![sourcehut](https://img.shields.io/badge/repository-sourcehut-lightgrey.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSINCiAgICB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdyIgeD0iLTEwJSIgeT0iLTEwJSIgd2lkdGg9IjEyNSUiIGhlaWdodD0iMTI1JSI+DQogICAgICA8ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMCIgc3RkRGV2aWF0aW9uPSIxLjUiDQogICAgICAgIGZsb29kLWNvbG9yPSJibGFjayIgLz4NCiAgICA8L2ZpbHRlcj4NCiAgICA8ZmlsdGVyIGlkPSJ0ZXh0LXNoYWRvdyIgeD0iLTEwJSIgeT0iLTEwJSIgd2lkdGg9IjEyNSUiIGhlaWdodD0iMTI1JSI+DQogICAgICA8ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMCIgc3RkRGV2aWF0aW9uPSIxLjUiDQogICAgICAgIGZsb29kLWNvbG9yPSIjQUFBIiAvPg0KICAgIDwvZmlsdGVyPg0KICA8L2RlZnM+DQogIDxjaXJjbGUgY3g9IjUwJSIgY3k9IjUwJSIgcj0iMzglIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQlIg0KICAgIGZpbGw9Im5vbmUiIGZpbHRlcj0idXJsKCNzaGFkb3cpIiAvPg0KICA8Y2lyY2xlIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjM4JSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0JSINCiAgICBmaWxsPSJub25lIiBmaWx0ZXI9InVybCgjc2hhZG93KSIgLz4NCjwvc3ZnPg0KCg==)](https://git.sr.ht/~seirdy/clogstats)
 [![GitLab
@@ -7,7 +7,7 @@ mirror](https://img.shields.io/badge/mirror-GitLab-orange.svg?logo=gitlab)](http
 [![GitHub
 mirror](https://img.shields.io/badge/mirror-GitHub-black.svg?logo=github)](https://github.com/Seirdy/clogstats)
 
-Weestats tells you statistics about your WeeChat channels by reading your chat logs.
+Clogstats tells you statistics about your WeeChat channels by reading your chat logs.
 It can currently tell you the most active IRC channels and nicks across a given
 duration (the last 24 hours by default).
 
@@ -19,7 +19,7 @@ handling.
 Dependencies
 ------------
 
-Weestats supports CPython 3.6+ and PyPy3 7.3+.
+Clogstats supports CPython 3.6+ and PyPy3 7.3+.
 
 Python 3.7+: no 3rd-party dependencies.
 
@@ -57,7 +57,7 @@ file.
 Features and Usage
 ------------------
 
-Weestats can sort channels by their number of messages or number of non-lurkers
+Clogstats can sort channels by their number of messages or number of non-lurkers
 (i.e., the number of nicks that actually sent a message). It can also display the top
 most active nicks for each channel.
 
@@ -120,8 +120,8 @@ RANK CHANNEL                  MSGS NICKS TOPWORDS
 ```
 
 Another example: say I finished an anime episode that just came out and want to talk
-about it. Weestats can filter my anime channels to just those that were active in the
-past 30 minutes:
+about it. Clogstats can filter my anime channels to just those that were active in
+the past 30 minutes:
 
 ``` sh
 clogstats -d 0.5 --sort-by msgs --min-activity 1 --include-channels \
@@ -141,6 +141,13 @@ RANK CHANNEL         MSGS NICKS TOPWORDS
 
 Looks like the `#anime` channels on Freenode and QuakeNet are the only one with
 recent activity.
+
+FAQ
+---
+
+### Q: Is this "clogstats" pronounced "see-log-stats" or "clog-stats"?
+
+A: Yes.
 
 License
 -------
