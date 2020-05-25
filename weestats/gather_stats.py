@@ -81,12 +81,12 @@ def read_all_lines(path: Path) -> Iterator[IRCMessage]:
 def log_reader(path: Path, date_range: DateRange) -> Iterator[IRCMessage]:
     """Find all IRC messages within date_range for path."""
     all_messages: Iterator[IRCMessage] = read_all_lines(path)
-    if date_range.start_time is not None:
+    if date_range.start_time:
         all_messages = dropwhile(
             lambda message: message.timestamp <= date_range.start_time,  # type: ignore[operator]
             all_messages,
         )
-    if date_range.end_time is not None:
+    if date_range.end_time:
         all_messages = takewhile(
             lambda message: message.timestamp <= date_range.end_time,  # type: ignore[operator]
             all_messages,
