@@ -1,9 +1,9 @@
-"""The command-line interface for weestats."""
+"""The command-line interface for clogstats."""
 import argparse
 from datetime import datetime, timedelta
 from typing import Collection, Dict, List, Optional, Set
 
-from weestats.gather_stats import DateRange, analyze_all_logs
+from clogstats.gather_stats import DateRange, analyze_all_logs
 
 
 def parse_args() -> argparse.Namespace:
@@ -90,7 +90,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main():
-    """Run weestats from the CLI and dump the results."""
+    """Run clogstats from the CLI and dump the results."""
     # get user-supplied parameters
     args = parse_args()
     end_time = datetime.now()

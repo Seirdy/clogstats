@@ -1,17 +1,17 @@
-weestats
+clogstats
 ========
 
-[![sourcehut](https://img.shields.io/badge/repository-sourcehut-lightgrey.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSINCiAgICB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdyIgeD0iLTEwJSIgeT0iLTEwJSIgd2lkdGg9IjEyNSUiIGhlaWdodD0iMTI1JSI+DQogICAgICA8ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMCIgc3RkRGV2aWF0aW9uPSIxLjUiDQogICAgICAgIGZsb29kLWNvbG9yPSJibGFjayIgLz4NCiAgICA8L2ZpbHRlcj4NCiAgICA8ZmlsdGVyIGlkPSJ0ZXh0LXNoYWRvdyIgeD0iLTEwJSIgeT0iLTEwJSIgd2lkdGg9IjEyNSUiIGhlaWdodD0iMTI1JSI+DQogICAgICA8ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMCIgc3RkRGV2aWF0aW9uPSIxLjUiDQogICAgICAgIGZsb29kLWNvbG9yPSIjQUFBIiAvPg0KICAgIDwvZmlsdGVyPg0KICA8L2RlZnM+DQogIDxjaXJjbGUgY3g9IjUwJSIgY3k9IjUwJSIgcj0iMzglIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQlIg0KICAgIGZpbGw9Im5vbmUiIGZpbHRlcj0idXJsKCNzaGFkb3cpIiAvPg0KICA8Y2lyY2xlIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjM4JSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0JSINCiAgICBmaWxsPSJub25lIiBmaWx0ZXI9InVybCgjc2hhZG93KSIgLz4NCjwvc3ZnPg0KCg==)](https://git.sr.ht/~seirdy/weestats)
+[![sourcehut](https://img.shields.io/badge/repository-sourcehut-lightgrey.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSINCiAgICB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCI+DQogIDxkZWZzPg0KICAgIDxmaWx0ZXIgaWQ9InNoYWRvdyIgeD0iLTEwJSIgeT0iLTEwJSIgd2lkdGg9IjEyNSUiIGhlaWdodD0iMTI1JSI+DQogICAgICA8ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMCIgc3RkRGV2aWF0aW9uPSIxLjUiDQogICAgICAgIGZsb29kLWNvbG9yPSJibGFjayIgLz4NCiAgICA8L2ZpbHRlcj4NCiAgICA8ZmlsdGVyIGlkPSJ0ZXh0LXNoYWRvdyIgeD0iLTEwJSIgeT0iLTEwJSIgd2lkdGg9IjEyNSUiIGhlaWdodD0iMTI1JSI+DQogICAgICA8ZmVEcm9wU2hhZG93IGR4PSIwIiBkeT0iMCIgc3RkRGV2aWF0aW9uPSIxLjUiDQogICAgICAgIGZsb29kLWNvbG9yPSIjQUFBIiAvPg0KICAgIDwvZmlsdGVyPg0KICA8L2RlZnM+DQogIDxjaXJjbGUgY3g9IjUwJSIgY3k9IjUwJSIgcj0iMzglIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQlIg0KICAgIGZpbGw9Im5vbmUiIGZpbHRlcj0idXJsKCNzaGFkb3cpIiAvPg0KICA8Y2lyY2xlIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjM4JSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0JSINCiAgICBmaWxsPSJub25lIiBmaWx0ZXI9InVybCgjc2hhZG93KSIgLz4NCjwvc3ZnPg0KCg==)](https://git.sr.ht/~seirdy/clogstats)
 [![GitLab
-mirror](https://img.shields.io/badge/mirror-GitLab-orange.svg?logo=gitlab)](https://gitlab.com/Seirdy/weestats)
+mirror](https://img.shields.io/badge/mirror-GitLab-orange.svg?logo=gitlab)](https://gitlab.com/Seirdy/clogstats)
 [![GitHub
-mirror](https://img.shields.io/badge/mirror-GitHub-black.svg?logo=github)](https://github.com/Seirdy/weestats)
+mirror](https://img.shields.io/badge/mirror-GitHub-black.svg?logo=github)](https://github.com/Seirdy/clogstats)
 
 Weestats tells you statistics about your WeeChat channels by reading your chat logs.
 It can currently tell you the most active IRC channels and nicks across a given
 duration (the last 24 hours by default).
 
-The motivation for writing weestats was to overcome the limitations of its
+The motivation for writing clogstats was to overcome the limitations of its
 predecessor, [chattiest-channels](https://git.sr.ht/~seirdy/chattiest-channels);
 chattiest-channels served mostly as a proof-of-concept and had *very* messy date/time
 handling.
@@ -33,7 +33,7 @@ Installation
 Install with `pip`:
 
 ``` sh
-python3 -m pip install git+https://git.sr.ht/~seirdy/weestats
+python3 -m pip install git+https://git.sr.ht/~seirdy/clogstats
 ```
 
 Flood mitigation
@@ -46,7 +46,7 @@ Flood mitigation measures include:
 - Filtering out a small list of known bot nicks. This filtering happens on a
   per-network basis and matches blacklisted nicks against a server name. This only
   works if the server names in your WeeChat configs match the server names specified
-  by `BOT_BLACKLISTS` in `weestats/gather_stats.py`
+  by `BOT_BLACKLISTS` in `clogstats/gather_stats.py`
 
 Planned areas of improvement for flood mitigation primarily involve filtering out
 messages by user-configurable per-network regular expressions and nick blacklists. I
@@ -64,7 +64,7 @@ most active nicks for each channel.
 Full usage:
 
 ``` text
-usage: weestats [-h] [-d DURATION] [-n NUM] [--min-activity MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [-s {msgs,nicks}]
+usage: clogstats [-h] [-d DURATION] [-n NUM] [--min-activity MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [-s {msgs,nicks}]
                 [--include-channels [INCLUDE_CHANNELS [INCLUDE_CHANNELS ...]]] [--exclude-channels [EXCLUDE_CHANNELS [EXCLUDE_CHANNELS ...]]]
                 [--disable-bot-filters]
 
@@ -98,7 +98,7 @@ Print the 10 most active IRC channels from the past 24 hours that have at least 
 chatters, along with the top 4 most active nicks per channel:
 
 ``` sh
-weestats -n 10 --sort-by msgs -d 24 --min-nicks 40 --max-topwords 4
+clogstats -n 10 --sort-by msgs -d 24 --min-nicks 40 --max-topwords 4
 ```
 
 Output:
@@ -124,7 +124,7 @@ about it. Weestats can filter my anime channels to just those that were active i
 past 30 minutes:
 
 ``` sh
-weestats -d 0.5 --sort-by msgs --min-activity 1 --include-channels \
+clogstats -d 0.5 --sort-by msgs --min-activity 1 --include-channels \
 	"freenode.##anime" "freenode.#anime" "freenode.#reddit-anime" \
 	"quakenet.#anime" "rizon.#anime" "tilde_chat.#anime"
 ```

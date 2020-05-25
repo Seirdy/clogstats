@@ -19,7 +19,7 @@ from typing import (
     Set,
 )
 
-from weestats.parse import IRCMessage
+from clogstats.parse import IRCMessage
 
 BOT_BLACKLISTS: Dict[str, Set[str]] = {
     "2600net": {"jarvis", "gbot"},

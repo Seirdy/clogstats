@@ -1,4 +1,4 @@
-"""Package weestats."""
+"""Package clogstats."""
 
 from pathlib import Path
 
@@ -14,16 +14,16 @@ def get_long_description() -> str:
 
 
 setup(
-    name="weestats",
+    name="clogstats",
     author="Rohan Kumar",
     description="Gather statistics from WeeChat log files.",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
-    url="https://git.sr.ht/~seirdy/weestats",
-    packages=["weestats"],
+    url="https://git.sr.ht/~seirdy/clogstats",
+    packages=["clogstats"],
     license="AGPLv3+",
     python_requires=">=3.6",
     # backport py3's dataclasses
     install_requires=["dataclasses>=0.6; python_version < '3.7'"],
-    entry_points={"console_scripts": ["weestats=weestats.cli:main"]},
+    entry_points={"console_scripts": ["clogstats=clogstats.cli:main"]},
 )
