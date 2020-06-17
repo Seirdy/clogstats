@@ -9,6 +9,13 @@ _TAB = re.compile("\t")
 NICK_PREFIXES = {"+", "%", "@", "~", "&"}
 
 
+def strip_nick_prefix(nick: str) -> str:
+    """Strip out nick prefixes showing enabled modes."""
+    if nick[0] in NICK_PREFIXES:
+        return nick[1:]
+    return nick
+
+
 def msg_type(prefix: str) -> str:
     """Type of IRC message.
 

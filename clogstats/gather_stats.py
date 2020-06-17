@@ -10,7 +10,7 @@ from typing import (Collection, Counter, Dict, Iterator, List, Mapping,
 
 import pandas as pd  # type: ignore
 
-from clogstats.parse import ANSI_ESCAPE, msg_type
+from clogstats.parse import ANSI_ESCAPE, msg_type, strip_nick_prefix
 
 BOT_BLACKLISTS: Dict[str, Set[str]] = {
     "2600net": {"jarvis", "gbot"},
@@ -29,8 +29,8 @@ BOT_BLACKLISTS: Dict[str, Set[str]] = {
 class DateRange(NamedTuple):
     """A time range used to select the part of a log file we want to analyze."""
 
-    start_time: Optional[datetime] = None
-    end_time: Optional[datetime] = None
+    start_time: datetime = datetime.min  # IRC didn't exist on 0001-01-01 CE [citation needed]
+    end_time: datetime = datetime.max  # if civilization is a thing at that time, I hope nobody runs this.
 
 
 CHANNEL_REGEX = re.compile(r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)")
@@ -67,16 +67,18 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     logfile_df["timestamps"] = pd.to_datetime(
         logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S"
     )
+    # remove ANSI color escape codes from prefix column
+    logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "").apply(strip_nick_prefix)
     # this is time-series data. set timestamp column to index
     logfile_df.set_index("timestamps")
     # save message type of each line
     logfile_df["msg_types"] = (
-        logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "").apply(msg_type)
+        logfile_df["prefixes"].apply(msg_type)
     )
     # nick column: first copy over the prefix column, then replace prefixes that aren't nicks
     logfile_df["nicks"] = logfile_df["prefixes"]
     logfile_df.loc[logfile_df["msg_types"] != "message", "nicks"] = None
-    # TODO: add nicks for join/quit/action
+    # TODO: add nicks for msgs of type "action", "join", "leave"
     return logfile_df
 
 
@@ -135,7 +137,7 @@ def analyze_log(
 
 
 class AnalyzeLogArgs(NamedTuple):
-    """Conatiner for the args to unpack and pass to analyze_log."""
+    """Container for the args to unpack and pass to analyze_log."""
 
     path: Path
     date_range: DateRange
