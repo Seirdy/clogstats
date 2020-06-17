@@ -55,6 +55,21 @@ def log_paths(
             yield path
 
 
+# def print_full(x):
+#     pd.set_option('display.max_rows', len(x))
+#     pd.set_option('display.max_columns', None)
+#     pd.set_option('display.width', 2000)
+#     pd.set_option('display.float_format', '{:20,.2f}'.format)
+#     pd.set_option('display.max_colwidth', -1)
+#     print(x)
+#     pd.reset_option('display.max_rows')
+#     pd.reset_option('display.max_columns')
+#     pd.reset_option('display.width')
+#     pd.reset_option('display.float_format')
+#     pd.reset_option('display.max_colwidth')
+#     # thank you stackoverflow
+
+
 def read_all_lines(path: Path) -> pd.DataFrame:
     """Convert a WeeChat log file to a DataFrame with the relevant information."""
     logfile_df = pd.read_csv(
@@ -62,13 +77,15 @@ def read_all_lines(path: Path) -> pd.DataFrame:
         sep="\t",
         error_bad_lines=False,
         names=("timestamps", "prefixes", "bodies"),
+        dtype={"prefixes": str},
     )
     # convert timestamp column to pandas datetime
     logfile_df["timestamps"] = pd.to_datetime(
         logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S"
     )
     # remove ANSI color escape codes from prefix column
-    logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "").apply(strip_nick_prefix)
+    # logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "")
+    logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "")
     # this is time-series data. set timestamp column to index
     logfile_df.set_index("timestamps")
     # save message type of each line
@@ -78,7 +95,9 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     # nick column: first copy over the prefix column, then replace prefixes that aren't nicks
     logfile_df["nicks"] = logfile_df["prefixes"]
     logfile_df.loc[logfile_df["msg_types"] != "message", "nicks"] = None
-    # TODO: add nicks for msgs of type "action", "join", "leave"
+    # print_full(logfile_df["nicks"])
+    logfile_df["nicks"] = logfile_df["nicks"].apply(strip_nick_prefix)  # strip nick prefixes like "+", "@"
+    # TODO: add nicks for msgs of type "action", "join", "leave". The nick is the first word of the message.
     return logfile_df
 
 
@@ -120,7 +139,6 @@ def analyze_log(
         nick_blacklist = set()
     # the values we'll extract to build the IRCChannel
     name = path.name[4:-11]  # strip off the "irc." prefix and ".weechatlog" suffix
-    msgs = 0
     logfile_df = log_reader(path, date_range)
 
     # topwords
