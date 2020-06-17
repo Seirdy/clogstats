@@ -47,9 +47,10 @@ def log_paths(
     log_dir = weechat_home / "logs"
     for path in log_dir.glob("irc.*.[#]*.weechatlog"):
         if (exclude_channels is None or path.name[4:-11] not in exclude_channels) and (
-            include_channels is None or
-            len(include_channels) == 0 or
-            path.name[4:-11] in include_channels
+            include_channels is None
+            or len(include_channels) == 0
+            or path.name[4:-11]  # strip out leading "irc.", trailing ".weechatlog"
+            in include_channels
         ):
             yield path
 
@@ -82,7 +83,10 @@ def read_all_lines(path: Path) -> pd.DataFrame:
 def log_reader(path: Path, date_range: DateRange) -> pd.DataFrame:
     """Find all IRC messages within date_range for path."""
     logfile_df: pd.DataFrame = read_all_lines(path)
-    logfile_df = logfile_df[(logfile_df['timestamps'] > date_range.start_time) & (logfile_df['timestamps'] < date_range.end_time)]
+    logfile_df = logfile_df[
+        (logfile_df["timestamps"] > date_range.start_time)
+        & (logfile_df["timestamps"] < date_range.end_time)
+    ]
     # logfile_df = logfile_df.loc[pd.Timestamp(date_range.start_time):pd.Timestamp(date_range.end_time)]
     return logfile_df
 
@@ -122,7 +126,7 @@ def analyze_log(
     # multiple consecutive messages from one nick should be grouped together
     nicks = nicks.loc[nicks.shift(1) != nicks]
     # TODO: remove blacklisted nicks
-    nick_counts: pd.Series = nicks_no_consecutive.value_counts()
+    nick_counts: pd.Series = nicks.value_counts()
     topwords: Counter[str] = Counter(nick_counts.to_dict())
 
     # total messages
