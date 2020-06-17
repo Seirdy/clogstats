@@ -2,24 +2,15 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from itertools import dropwhile, takewhile
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from sys import stderr
-from typing import (
-    Collection,
-    Counter,
-    Dict,
-    Iterator,
-    List,
-    Mapping,
-    NamedTuple,
-    Optional,
-    Set,
-)
+from typing import (Collection, Counter, Dict, Iterator, List, Mapping,
+                    NamedTuple, Optional, Set)
 
-from clogstats.parse import IRCMessage
+import pandas as pd  # type: ignore
+
+from clogstats.parse import ANSI_ESCAPE, msg_type
 
 BOT_BLACKLISTS: Dict[str, Set[str]] = {
     "2600net": {"jarvis", "gbot"},
@@ -56,42 +47,44 @@ def log_paths(
     log_dir = weechat_home / "logs"
     for path in log_dir.glob("irc.*.[#]*.weechatlog"):
         if (exclude_channels is None or path.name[4:-11] not in exclude_channels) and (
-            include_channels is None
-            or len(include_channels) == 0
-            or path.name[4:-11] in include_channels
+            include_channels is None or
+            len(include_channels) == 0 or
+            path.name[4:-11] in include_channels
         ):
             yield path
 
 
-def read_all_lines(path: Path) -> Iterator[IRCMessage]:
-    """Lazily convert every line in a WeeChat log file to an IRCMessage.
+def read_all_lines(path: Path) -> pd.DataFrame:
+    """Convert a WeeChat log file to a DataFrame with the relevant information."""
+    logfile_df = pd.read_csv(
+        path,
+        sep="\t",
+        error_bad_lines=False,
+        names=("timestamps", "prefixes", "bodies"),
+    )
+    # convert timestamp column to pandas datetime
+    logfile_df["timestamps"] = pd.to_datetime(
+        logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S"
+    )
+    # this is time-series data. set timestamp column to index
+    logfile_df.set_index("timestamps")
+    # save message type of each line
+    logfile_df["msg_types"] = (
+        logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "").apply(msg_type)
+    )
+    # nick column: first copy over the prefix column, then replace prefixes that aren't nicks
+    logfile_df["nicks"] = logfile_df["prefixes"]
+    logfile_df.loc[logfile_df["msg_types"] != "message", "nicks"] = None
+    # TODO: add nicks for join/quit/action
+    return logfile_df
 
-    Skips any line that fails to parse, alerting the user in stderr.
-    """
-    for row in path.open(mode="r", encoding="utf-8"):
-        try:
-            yield IRCMessage(row)
-        except ValueError as error:
-            print(
-                "error reading log file " + str(path) + ": " + str(error) + "\033[0m",
-                file=stderr,
-            )
 
-
-def log_reader(path: Path, date_range: DateRange) -> Iterator[IRCMessage]:
+def log_reader(path: Path, date_range: DateRange) -> pd.DataFrame:
     """Find all IRC messages within date_range for path."""
-    all_messages: Iterator[IRCMessage] = read_all_lines(path)
-    if date_range.start_time:
-        all_messages = dropwhile(
-            lambda message: message.timestamp <= date_range.start_time,  # type: ignore[operator]
-            all_messages,
-        )
-    if date_range.end_time:
-        all_messages = takewhile(
-            lambda message: message.timestamp <= date_range.end_time,  # type: ignore[operator]
-            all_messages,
-        )
-    return all_messages
+    logfile_df: pd.DataFrame = read_all_lines(path)
+    logfile_df = logfile_df[(logfile_df['timestamps'] > date_range.start_time) & (logfile_df['timestamps'] < date_range.end_time)]
+    # logfile_df = logfile_df.loc[pd.Timestamp(date_range.start_time):pd.Timestamp(date_range.end_time)]
+    return logfile_df
 
 
 @dataclass
@@ -122,16 +115,18 @@ def analyze_log(
     # the values we'll extract to build the IRCChannel
     name = path.name[4:-11]  # strip off the "irc." prefix and ".weechatlog" suffix
     msgs = 0
-    topwords: Counter[str] = Counter()
-    # save the previously-extracted nick as well. Use it to merge
-    # multiple consecutive messages from the same nick.
-    prev_nick: str = ""
-    for message in log_reader(path, date_range):
-        # mypy false positives: the if-statement ensures that message.nick isn't None
-        if message.nick not in nick_blacklist.union({prev_nick, None}):  # type: ignore[arg-type]
-            prev_nick = message.nick  # type: ignore[assignment]
-            topwords[message.nick] += 1  # type: ignore[index]
-            msgs += 1
+    logfile_df = log_reader(path, date_range)
+
+    # topwords
+    nicks: pd.DataFrame = logfile_df["nicks"]
+    # multiple consecutive messages from one nick should be grouped together
+    nicks = nicks.loc[nicks.shift(1) != nicks]
+    # TODO: remove blacklisted nicks
+    nick_counts: pd.Series = nicks_no_consecutive.value_counts()
+    topwords: Counter[str] = Counter(nick_counts.to_dict())
+
+    # total messages
+    msgs = nick_counts.sum()
     return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs,)
 
 
@@ -182,6 +177,7 @@ def analyze_all_logs(
             exclude_channels=exclude_channels, include_channels=include_channels
         )
     )
+    # return [analyze_log_wrapper(args) for args in analyze_log_args]
     with Pool() as pool:
         return sorted(
             pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),

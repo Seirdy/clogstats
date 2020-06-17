@@ -1,4 +1,4 @@
-"""The command-line interface for clogstats."""
+"""The command-line interface for clogstats_forecasting."""
 import argparse
 from datetime import datetime, timedelta
 from typing import Collection, Dict, List, Optional, Set
@@ -90,7 +90,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main():
-    """Run clogstats from the CLI and dump the results."""
+    """Run clogstats_forecasting from the CLI and dump the results."""
     # get user-supplied parameters
     args = parse_args()
     end_time = datetime.now()
