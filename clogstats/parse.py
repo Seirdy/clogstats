@@ -1,12 +1,9 @@
 """Extract raw data from a single IRC message."""
 
-import re
 from typing import Optional
 
-# precompiled regexes
+# regexes
 ANSI_ESCAPE = r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]"
-_ANSI_ESCAPE_RE = re.compile(ANSI_ESCAPE)
-_TAB = re.compile("\t")
 NICK_PREFIXES = {"+", "%", "@", "~", "&"}
 
 
@@ -20,7 +17,7 @@ def strip_nick_prefix(nick: Optional[str]) -> Optional[str]:
 
 
 def msg_type(prefix: str) -> str:
-    """Type of IRC message.
+    """Type of IRC message, determined by the message prefix.
 
     See WeeChat Plugin API docs for prefixes and their meanings.
     """
@@ -33,12 +30,8 @@ def msg_type(prefix: str) -> str:
             " *": "action",
             "-->": "join",
             "<--": "quit",
-            "": "other",  # emptystr = no prefix: other. rarely occurs in the wild.
+            "": "other",  # empty string = no prefix: other. rarely occurs in the wild.
         }[prefix]
     except KeyError:
+        # the prefix is a nick
         return "message"
-
-
-def escape_ansi(line: str) -> str:
-    """Remove ANSI escape sequences logged by WeeChat."""
-    return _ANSI_ESCAPE_RE.sub("", line)

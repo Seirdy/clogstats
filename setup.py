@@ -24,10 +24,6 @@ setup(
     license="AGPLv3+",
     python_requires=">=3.6",
     # backport py3's dataclasses
-    install_requires=[
-        "dataclasses>=0.6; python_version < '3.7'",
-        "pandas>=0.25.3",
-        "numpy>=1.18.4",
-    ],
+    install_requires=["dataclasses>=0.6; python_version < '3.7'", "pandas>=0.25.3"],
     entry_points={"console_scripts": ["clogstats=clogstats.cli:main"]},
 )

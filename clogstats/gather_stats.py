@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import (Collection, Counter, Dict, Iterator, List, Mapping,
                     NamedTuple, Optional, Set)
 
-import pandas as pd  # type: ignore
+import pandas as pd  # type: ignore  # mypy doesn't have type stubs for pandas yet.
 
 from clogstats.parse import ANSI_ESCAPE, msg_type, strip_nick_prefix
 
@@ -55,21 +55,6 @@ def log_paths(
             yield path
 
 
-# def print_full(x):
-#     pd.set_option('display.max_rows', len(x))
-#     pd.set_option('display.max_columns', None)
-#     pd.set_option('display.width', 2000)
-#     pd.set_option('display.float_format', '{:20,.2f}'.format)
-#     pd.set_option('display.max_colwidth', -1)
-#     print(x)
-#     pd.reset_option('display.max_rows')
-#     pd.reset_option('display.max_columns')
-#     pd.reset_option('display.width')
-#     pd.reset_option('display.float_format')
-#     pd.reset_option('display.max_colwidth')
-#     # thank you stackoverflow
-
-
 def read_all_lines(path: Path) -> pd.DataFrame:
     """Convert a WeeChat log file to a DataFrame with the relevant information."""
     logfile_df = pd.read_csv(
@@ -89,15 +74,26 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     # this is time-series data. set timestamp column to index
     logfile_df.set_index("timestamps")
     # save message type of each line
-    logfile_df["msg_types"] = (
-        logfile_df["prefixes"].apply(msg_type)
-    )
-    # nick column: first copy over the prefix column, then replace prefixes that aren't nicks
+    logfile_df["msg_types"] = logfile_df["prefixes"].apply(msg_type)
+    # nick column
+    # rows with msgtype "message" have the nick in the "prefix" column.
+    # Rows with msgtype join/leave/action have nick as the first word of the msg body.
     logfile_df["nicks"] = logfile_df["prefixes"]
     logfile_df.loc[logfile_df["msg_types"] != "message", "nicks"] = None
-    # print_full(logfile_df["nicks"])
-    logfile_df["nicks"] = logfile_df["nicks"].apply(strip_nick_prefix)  # strip nick prefixes like "+", "@"
-    # TODO: add nicks for msgs of type "action", "join", "leave". The nick is the first word of the message.
+    logfile_df["nicks"] = logfile_df["nicks"].apply(
+        strip_nick_prefix
+    )  # strip nick prefixes like "+", "@"
+    # add nicks to msgtypes join, leave, and action
+    is_join_leave_action: pd.Series = logfile_df["msg_types"].isin(
+        {"join", "leave", "action"}
+    )
+    # join_leave_action_nicks: pd.DataFrame = logfile_df.loc[is_join_leave_action, "nicks"]
+    # join_leave_action_bodies: pd.DataFrame = logfile_df.loc[is_join_leave_action, "bodies"]
+    logfile_df.loc[is_join_leave_action, "nicks"] = (
+        logfile_df.loc[is_join_leave_action, "bodies"]
+        .apply(lambda body: body.split()[0])
+        .str.replace(ANSI_ESCAPE, "")
+    )
     return logfile_df
 
 
@@ -142,10 +138,14 @@ def analyze_log(
     logfile_df = log_reader(path, date_range)
 
     # topwords
-    nicks: pd.DataFrame = logfile_df["nicks"]
+    # we want nicks for messages and actions.
+    nicks: pd.DataFrame = logfile_df.loc[
+        logfile_df["msg_types"].isin({"message", "action"}), "nicks"
+    ]
     # multiple consecutive messages from one nick should be grouped together
     nicks = nicks.loc[nicks.shift(1) != nicks]
-    # TODO: remove blacklisted nicks
+    # remove blacklisted nicks. Nicks are case-insensitive
+    nicks = nicks[~nicks.str.lower().isin(nick_blacklist)]
     nick_counts: pd.Series = nicks.value_counts()
     topwords: Counter[str] = Counter(nick_counts.to_dict())
 
