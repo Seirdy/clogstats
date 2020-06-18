@@ -1,7 +1,47 @@
-[build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+[tool.poetry]
+name = "clogstats"
+version = "0.0.1"
+description = "Gather statistics from WeeChat log files"
+readme = "README.md"
+authors = ["Rohan Kumar <seirdy@protonmail.com>"]
+homepage = "https://git.sr.ht/~seirdy/clogstats"
+repository = "https://git.sr.ht/~seirdy/clogstats"
+license = "AGPL-3.0-or-later"
 
-[tool.setuptools_scm]
+[tool.poetry.dependencies]
+python = "^3.6.1"
+pandas = ">=0.25.3, <2.0.0"
+dataclasses = {version = "^0.7", python = ">=3.6.1, <3.7"}
+
+[tool.poetry.scripts]
+clogstats = "clogstats.cli:main"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+mypy = "^0.780"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']
 disable = ["line-too-long"]
+
+[tool.isort]
+line_length = 88
+# force_single_line = true
+atomic = true
+include_trailing_comma = true
+lines_after_imports = 2
+lines_between_types = 1
+multi_line_output = 3
+use_parentheses = true
+
+known_first_party = "clogstats"
+known_third_party = [
+	"pandas",
+]
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'

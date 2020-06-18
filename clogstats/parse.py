@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+
 # regexes
 ANSI_ESCAPE = r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]"
 NICK_PREFIXES = {"+", "%", "@", "~", "&"}

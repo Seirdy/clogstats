@@ -1,16 +1,27 @@
 """Components for reading WeeChat logs and gathering statistics from them."""
 import re
+
 from dataclasses import dataclass
 from datetime import datetime
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import (Collection, Counter, Dict, Iterator, List, Mapping,
-                    NamedTuple, Optional, Set)
+from typing import (
+    Collection,
+    Counter,
+    Dict,
+    Iterator,
+    List,
+    Mapping,
+    NamedTuple,
+    Optional,
+    Set,
+)
 
 import pandas as pd  # type: ignore  # mypy doesn't have type stubs for pandas yet.
 
 from clogstats.parse import ANSI_ESCAPE, msg_type, strip_nick_prefix
+
 
 BOT_BLACKLISTS: Dict[str, Set[str]] = {
     "2600net": {"jarvis", "gbot"},
