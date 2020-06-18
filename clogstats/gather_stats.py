@@ -40,8 +40,10 @@ BOT_BLACKLISTS: Dict[str, Set[str]] = {
 class DateRange(NamedTuple):
     """A time range used to select the part of a log file we want to analyze."""
 
-    start_time: datetime = datetime.min  # IRC didn't exist on 0001-01-01 CE [citation needed]
-    end_time: datetime = datetime.max  # if civilization is a thing at that time, I hope nobody runs this.
+    # IRC didn't exist on 0001-01-01 CE [citation needed]
+    start_time: datetime = datetime.min
+    # if civilization is a thing at datetime.max, I hope nobody runs this.
+    end_time: datetime = datetime.max
 
 
 CHANNEL_REGEX = re.compile(r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)")
@@ -115,7 +117,6 @@ def log_reader(path: Path, date_range: DateRange) -> pd.DataFrame:
         (logfile_df["timestamps"] > date_range.start_time)
         & (logfile_df["timestamps"] < date_range.end_time)
     ]
-    # logfile_df = logfile_df.loc[pd.Timestamp(date_range.start_time):pd.Timestamp(date_range.end_time)]
     return logfile_df
 
 
