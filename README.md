@@ -19,13 +19,13 @@ handling.
 Dependencies
 ------------
 
-Clogstats supports CPython 3.6+ and PyPy3 7.3+.
+Clogstats supports CPython 3.6.1+ and PyPy3 7.3+. It uses
+[Poetry](https://python-poetry.org/) for dependency management.
 
-Python 3.7+: no 3rd-party dependencies.
+Python 3.7+: Pandas. Pandas depends on NumPy and Cython.
 
-Python 3.6: the only 3rd-party dependency is [a
-backport](https://pypi.org/project/dataclasses/) of Python 3.7's `dataclasses`
-library.
+Python 3.6: Pandas and [a backport](https://pypi.org/project/dataclasses/) of Python
+3.7's `dataclasses` library.
 
 Installation
 ------------
@@ -33,7 +33,16 @@ Installation
 Install with `pip`:
 
 ``` sh
-python3 -m pip install git+https://git.sr.ht/~seirdy/clogstats
+python3 -m pip install --user git+https://git.sr.ht/~seirdy/clogstats
+```
+
+I recommend trying out [pipx](https://pipxproject.github.io/pipx/) to auto-create
+virtual environments for Python executables and add them to your `$PATH`:
+
+``` sh
+python3 -m pip install --user pipx
+# use --system-site-packages if your distro offers packages for pandas/numpy so you don't have to build them yourself
+pipx install --system-site-packages git+https://git.sr.ht/~seirdy/clogstats
 ```
 
 Flood mitigation
@@ -145,7 +154,7 @@ recent activity.
 FAQ
 ---
 
-### Q: Is this "clogstats" pronounced "see-log-stats" or "clog-stats"?
+### Q: Is "clogstats" pronounced "see-log-stats" or "clog-stats"?
 
 A: Yes.
 
