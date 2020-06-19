@@ -1,0 +1,50 @@
+2020-06-19 12:45:49	[94m[32mnemo	[0m[95mguestkato[0m: funny thing is google's crappy performance is crappy in chrome too. maybe not as much
+2020-06-19 12:45:59	[94m[95mguestkato	[0mi'm going to end up reverse-engineering it to load the thumbnail without script
+2020-06-19 12:46:00	[94m[32mnemo	[0m[95mguestkato[0m: thankfully gmail at least still works in w3m ☺
+2020-06-19 12:46:05	[94m[94mEdePopede	[0mnow only their search needs more CPU than a locally played HD video
+2020-06-19 12:46:27	[94m[95mguestkato	[0mi mean, the youtube page has all the data it needs on load, yet it still takes forever
+2020-06-19 12:47:01	[94m[94mEdePopede	[0mmaybe their JS creating some HTMl from that data?
+2020-06-19 12:47:11	[94m[32mnemo	[0m[95mguestkato[0m: hm... youtube seems relatively snappy here for my simple needs
+2020-06-19 12:47:12	[94m[95mguestkato	[0ma lot, yes, after several seconds
+2020-06-19 12:47:22	[94m[32mnemo	[0mbut I only whitelist youtube.com and googlevideo.com
+2020-06-19 12:47:25	[94m[94mEdePopede	[0mbtw, it seems that even youtube-dl gets something different, also curl
+2020-06-19 12:47:25	[94m[32mnemo	[0mI don't know if that matters
+2020-06-19 12:47:26	[94m[95mguestkato	[0mwell i don't have a very fast computer, but it was fine before
+2020-06-19 12:48:01	[94m[32mnemo	[0madmittedly I don't use most of site so could be I'm breaking, oh, dunno, commenting or something
+2020-06-19 12:48:03	[0m[38;5;10m[49m-->	[0m[35mmicr0[0m[38;5;2m[49m [[0m[38;5;6m[49mmicr0[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mmicr0[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~micr0@ool-43503f8b.dyn.optonline.net[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 12:48:21	[94m[94mEdePopede	[0mi only whitelisted www.youtube.com and erm i think one other host. playing was out of limits already, even with the old system. just used it for browsing.
+2020-06-19 12:48:38	[94m[94mEdePopede	[0mthe only good thing are the bigger thumbnails now, that's all
+2020-06-19 12:49:08	[94m[35mmicr0	[0manyone have a ballpark benchmark for compiling firefox from scratch? I know it can vary wildly but I wanna get an idea if my machine is on the order of minutes, hours, or days
+2020-06-19 12:51:17	[0m[38;5;10m[49m-->	[0m[95mOGMatt[0m[38;5;2m[49m [[0m[38;5;6m[49mOGMatt[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mMatthew[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~OGMatt@82-68-14-22.dsl.in-addr.zen.co.uk[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 12:53:32	[0m[38;5;9m[49m<--	[0m[95mLady_Aleena[0m[38;5;2m[49m ([0m[38;5;6m[49m~Lady-Alee@unaffiliated/lady-aleena[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Quit: Leaving[0m[38;5;2m[49m)
+2020-06-19 12:55:38	[0m[38;5;10m[49m-->	[0m[95mLady_Aleena[0m[38;5;2m[49m [[0m[38;5;6m[49mLady-Aleena[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mrealname[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Lady-Alee@unaffiliated/lady-aleena[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 12:55:49	[0m[38;5;9m[49m<--	[0m[95mst-gourichon-fid[0m[38;5;2m[49m ([0m[38;5;6m[49m~Stephane@2a01:e0a:177:3e10:d227:88ff:fe71:788d[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 240 seconds[0m[38;5;2m[49m)
+2020-06-19 12:56:04	[0m[38;5;10m[49m-->	[0m[34maiyqmiz[0m[38;5;2m[49m [[0m[38;5;6m[49maiyqmiz[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49maiyqmiz[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~aiqmiz@topost.net[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:01:04	[0m[38;5;9m[49m<--	[0m[33mMadLamb[0m[38;5;2m[49m ([0m[38;5;6m[49m~fabio@x4e368e41.dyn.telefonica.de[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Remote host closed the connection[0m[38;5;2m[49m)
+2020-06-19 13:02:33	[0m[38;5;9m[49m<--	[0m[33mportalrat[0m[38;5;2m[49m ([0m[38;5;6m[49m~muskrat@trivialand/player/muskrat[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 260 seconds[0m[38;5;2m[49m)
+2020-06-19 13:04:30	[0m[38;5;10m[49m-->	[0m[35mmakingstuff[0m[38;5;2m[49m [[0m[38;5;6m[49mmakingstuff[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mNope[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Nope@82.11.88.7[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:09:03	[0m[38;5;9m[49m<--	[0m[35mJerrk[0m[38;5;2m[49m ([0m[38;5;6m[49mJerrkenghe@gateway/vpn/mullvad/jerrk[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 246 seconds[0m[38;5;2m[49m)
+2020-06-19 13:14:05	[0m[38;5;10m[49m-->	[0m[35mJerrk[0m[38;5;2m[49m [[0m[38;5;6m[49mJerrk[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49m...[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49mJerrkenghe@gateway/vpn/mullvad/jerrk[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:19:15	[0m[38;5;9m[49m<--	[0m[95mLady_Aleena[0m[38;5;2m[49m ([0m[38;5;6m[49m~Lady-Alee@unaffiliated/lady-aleena[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Quit: Leaving[0m[38;5;2m[49m)
+2020-06-19 13:20:47	[0m[38;5;10m[49m-->	[0m[95mLady_Aleena[0m[38;5;2m[49m [[0m[38;5;6m[49mLady-Aleena[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mrealname[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Lady-Alee@unaffiliated/lady-aleena[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:23:19	[94m[0m[38;5;15m[49mSeirdy	[0mwill the new Matrix server for Mozilla be bridged to IRC?
+2020-06-19 13:24:59	[94m[94mEdePopede	[0mone of the reasons they named was the problem managing users properly on IRC (read: trolls). so i don't think they'll open that door.
+2020-06-19 13:25:13	[0m[38;5;10m[49m-->	[0m[32mmydog2[0m[38;5;2m[49m [[0m[38;5;6m[49mmydog2[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mmydog2[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~mydog2@74.175.241.130[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:27:14	[94m[0m[38;5;15m[49mSeirdy	[0maww that sucks
+2020-06-19 13:27:38	[0m[38;5;9m[49m<--	[0mPinapl[0m[38;5;2m[49m ([0m[38;5;6m[49m~pinapl@2601:281:ca80:df0:ba27:ebff:fe0f:b4ab[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 260 seconds[0m[38;5;2m[49m)
+2020-06-19 13:28:03	[94m[95mCaspy7	[0m[97mSeirdy[0m: there's a possibility that once a IRCv3, uh, server...shim? would be done that they'd use it...
+2020-06-19 13:28:17	[94m[95mCaspy7	[0mlemme look up what I have on that...
+2020-06-19 13:29:07	[0m[38;5;9m[49m<--	[0m[35mmicr0[0m[38;5;2m[49m ([0m[38;5;6m[49m~micr0@ool-43503f8b.dyn.optonline.net[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Quit: micr0[0m[38;5;2m[49m)
+2020-06-19 13:29:31	[94m[95mguestkato	[0myou have to register either way. managing users doesn't really differ.
+2020-06-19 13:29:35	[94m[95mCaspy7	[0m[97mSeirdy[0m: so, as I recall, I spoke with a moz developer who said that if this were finished they'd be open to using it https://github.com/matrix-org/matrix-ircd
+2020-06-19 13:29:56	[94m[95mCaspy7	[0mright, the point is there not going to give up the advantages they gained from it
+2020-06-19 13:30:48	[94m[95mCaspy7	[0m*they're not
+2020-06-19 13:35:46	[94m[0m[38;5;15m[49mSeirdy	[0m[95mCaspy7[0m: Cool, thanks.
+2020-06-19 13:37:44	[0m[38;5;10m[49m-->	[0mPinapl[0m[38;5;2m[49m [[0m[38;5;6m[49mPinapl[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mpinapl[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~pinapl@2601:281:ca80:df0:ba27:ebff:fe0f:b4ab[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:40:11	[0m[38;5;10m[49m-->	[0m[95mcastanopsis[0m[38;5;2m[49m [[0m[38;5;6m[49mcastanopsis[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mcastanopsis[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~castanops@owari.nl[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#firefox[32m
+2020-06-19 13:40:32	[94m[0m[38;5;15m[49mSeirdy	[0m[94mEdePopede[0m: try https://invidio.us
+2020-06-19 13:41:45	[94m[95mguestkato	[0msometimes their api key gets banned or over its limit. there are other instances, but it's a pain. you could run your own, but then you have to log in to get a key.
+2020-06-19 13:42:09	[94m[95mguestkato	[0msame problem with the keys for other programs like youtube-viewer, which has a nice ui
+2020-06-19 13:42:38	[94m[94mEdePopede	[0m[97mSeirdy[0m: when i have a
+2020-06-19 13:42:49	[94m[94mEdePopede	[0mlink of a video i use youtube-dl anyway
+2020-06-19 13:42:59	[0m[38;5;15m[49m *	[0m[0m[0m[38;5;15m[49mSeirdy[0m just uses mpv + ytdl with tridactyl

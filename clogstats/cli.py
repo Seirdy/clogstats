@@ -2,7 +2,7 @@
 import argparse
 
 from datetime import datetime, timedelta
-from typing import Collection, Dict, List, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 from clogstats.gather_stats import DateRange, analyze_all_logs
 
@@ -87,10 +87,22 @@ def parse_args() -> argparse.Namespace:
         help="disable filtering of some known bots",
         action="store_true",
     )
+    parser.add_argument(
+        "--log-dir",
+        help="directory from which to read logs; defaults to $WEECHAT_HOME",
+        action="store",
+        type=str,
+        default=None,
+        required=False,
+    )
     return parser.parse_args()
 
 
-def main():
+# a row in the output table containing five columns
+Row = Tuple[str, str, str, str, str]
+
+
+def result_table() -> List[Row]:
     """Run clogstats_forecasting from the CLI and dump the results."""
     # get user-supplied parameters
     args = parse_args()
@@ -100,7 +112,7 @@ def main():
     )
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
-    nick_blacklists: Dict[str, Set[str]] = None
+    nick_blacklists: Optional[Dict[str, Set[str]]] = None
     if args.disable_bot_filters:
         nick_blacklists = {}
 
@@ -112,6 +124,7 @@ def main():
         exclude_channels=set(args.exclude_channels),
         nick_blacklists=nick_blacklists,
         sortkey=args.sort_by,
+        log_dir=args.log_dir,
     )
 
     # display total message count
@@ -125,8 +138,8 @@ def main():
         for channel in collected_stats
         if channel.msgs >= args.min_activity and channel.nicks >= args.min_nicks
     ]
-    column_headings = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
-    table_rows: List[Collection[str]] = [
+    column_headings: Row = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
+    table_rows: List[Row] = [
         (
             # channel ranking when sorting channels by # of messages (descending)
             f"{ranking}.",
@@ -144,9 +157,14 @@ def main():
         for ranking, channel in enumerate(collected_stats, start=1)
         if args.num is None or ranking <= args.num
     ]
-    full_table = [column_headings] + table_rows
+    return [column_headings] + table_rows
+
+
+def main():
+    """Generate a table of results and pretty-print them."""
+    full_table: List[Row] = result_table()
     # pretty-print that table with aligned columns
     # like `column -t` from BSD and util-linux
-    column_widths = [max(map(len, col)) for col in zip(*full_table)]
+    column_widths: List[int] = [max(map(len, col)) for col in zip(*full_table)]
     for row in full_table:
         print(" ".join((cell.ljust(width) for cell, width in zip(row, column_widths))))

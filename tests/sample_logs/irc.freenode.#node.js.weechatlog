@@ -1,0 +1,50 @@
+2020-06-19 13:19:36	[0m[38;5;10m[49m-->	[0m[0m[38;5;15m[49mSeirdy[0m[38;5;2m[49m [[0m[38;5;6m[49mseirdy[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mSeirdy[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Seirdy@89.45.90.100[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:19:36	[0m[38;5;5m[49m--	[0mTopic for [0m[38;5;15m[49m#Node.js[0m is "Can't talk? Get registered on freenode ( https://git.io/vaTS2 ) | Latest: v14.4.0 (LTS: Erbium v12.18.1, Dubnium v10.21.0; EOL: Carbon v8.17.0, Boron v6.17.1, Argon v4.9.1, v13, v11, v9, v7, <= v5) | Mission Statement: http://bit.ly/node-irc-mission-statement | Logs: https://freenode.logbot.info/node.js | On codes of conduct: http://j.mp/1RFlyvr https://blog.izs.me/2012/08/policy-on-trol[0m"
+2020-06-19 13:19:36	[0m[38;5;5m[49m--	[0mTopic set by [96mljharb[0m[38;5;2m[49m ([0m[38;5;6m[49msid43720@oftn/oswg-member/ljharb[0m[38;5;2m[49m)[0m on Wed, 17 Jun 2020 09:35:21
+2020-06-19 13:19:36	[0m[38;5;5m[49m--	[0mChannel [0m[38;5;15m[49m#Node.js[0m: [0m[38;5;15m[49m706[0m nicks [0m[38;5;2m[49m([0m[38;5;15m[49m7[0m ops, [0m[38;5;15m[49m0[0m voices, [0m[38;5;15m[49m699[0m normals[0m[38;5;2m[49m)
+2020-06-19 13:19:36	[0m[38;5;9m[49m<--	[0m[96mturboteddy[0m[38;5;2m[49m ([0m[38;5;6m[49m~Thunderbi@cm-84.209.129.202.getinternet.no[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Quit: /q[0m[38;5;2m[49m)
+2020-06-19 13:19:36	[0m[38;5;5m[49m--	[0m[32mPvNotice[0m[38;5;2m[49m([94mChanServ[0m[38;5;2m[49m)[0m: Node.js JavaScript runtime ✨ 🐢 🚀 ✨ https://nodejs.org
+2020-06-19 13:19:36	[0m[38;5;5m[49m--	[0mURL for [0m[38;5;15m[49m#node.js[0m: http://nodejs.org/
+2020-06-19 13:19:37	[0m[38;5;5m[49m--	[0mChannel created on Fri, 29 Jan 2010 23:48:24
+2020-06-19 13:19:54	[94m[34mThePendulum	[0mit should probably be marked async one way or another
+2020-06-19 13:20:08	[94m[34mThePendulum	[0meven if you don't use explicitly await inside of it
+2020-06-19 13:20:20	[94m[35mmikey3	[0mwhat do you guys use for pastes?
+2020-06-19 13:20:30	[94m[34mThePendulum	[0mpastery.net or gist.github.com
+2020-06-19 13:20:40	[0m[38;5;10m[49m-->	[0m[35mAAA_awright[0m[38;5;2m[49m [[0m[38;5;6m[49mAAA_awright[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mAustin Wright[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~AAA_awrig@71-223-136-4.phnx.qwest.net[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:20:42	[94m[34mThePendulum	[0m(me personally, not speaking for the collective)
+2020-06-19 13:21:34	[0m[38;5;9m[49m<--	[0m[94mshush[0m[38;5;2m[49m ([0m[38;5;6m[49m~pawn@2605:e000:1c02:c564:cd9c:1f70:1b0b:ed0e[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Remote host closed the connection[0m[38;5;2m[49m)
+2020-06-19 13:21:34	[0m[38;5;9m[49m<--	[0mDeltaHeavy[0m[38;5;2m[49m ([0m[38;5;6m[49m~DeltaHeav@unaffiliated/deltaheavy[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Client Quit[0m[38;5;2m[49m)
+2020-06-19 13:21:44	[0m[38;5;9m[49m<--	[0m[32menriooooooo[0m[38;5;2m[49m ([0m[38;5;6m[49m~nanoz@unaffiliated/nanoz[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 246 seconds[0m[38;5;2m[49m)
+2020-06-19 13:22:14	[0m[38;5;9m[49m<--	[0m[96mblack_ant[0m[38;5;2m[49m ([0m[38;5;6m[49m~antilope@unaffiliated/black-ant/x-1505394[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 240 seconds[0m[38;5;2m[49m)
+2020-06-19 13:22:15	[94m[35mmikey3	[0mhttps://www.pastery.net/bunmwz/
+2020-06-19 13:22:19	[94m[35mmikey3	[0mif you see my return, I commented the issue
+2020-06-19 13:22:37	[94m[35mmikey3	[0mI am now later wanting to return data (the resulting images width and height) for use later in my application
+2020-06-19 13:22:49	[94m[34mThePendulum	[0mthis is typescript?
+2020-06-19 13:23:03	[0m[38;5;9m[49m<--	[0m[95mRendeLuitjes[0m[38;5;2m[49m ([0m[38;5;6m[49m~rendeluit@e248017.upc-e.chello.nl[0m[38;5;2m[49m)[31m has left [0m[38;5;15m[49m#Node.js[31m
+2020-06-19 13:23:05	[0m[38;5;10m[49m-->	[0m[94mroyal_screwup21[0m[38;5;2m[49m [[0m[38;5;6m[49mroyal_screwup21[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49m[https://kiwiirc.com] royal_screwup21[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m522565dc@gateway/web/cgi-irc/kiwiirc.com/ip.82.37.101.220[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:23:05	[94m[35mmikey3	[0moh I forgot to show es6 sorry
+2020-06-19 13:23:10	[0m[38;5;10m[49m-->	[0mDeltaHeavy[0m[38;5;2m[49m [[0m[38;5;6m[49mDeltaHeavy[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mTextual User[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~DeltaHeav@unaffiliated/deltaheavy[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:23:25	[94m[35mmikey3	[0mI can strip the types if you dont want to deal with it
+2020-06-19 13:23:34	[94m[34mThePendulum	[0mjust making sure
+2020-06-19 13:24:01	[0m[38;5;10m[49m-->	[0m[96mCrash1hd__[0m[38;5;2m[49m [[0m[38;5;6m[49mCrash1hd[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mrealname[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Crash1hd@unaffiliated/crash1hd[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:24:30	[0m[38;5;10m[49m-->	[0m[94mshush[0m[38;5;2m[49m [[0m[38;5;6m[49mpawn[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mshush[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~pawn@2605:e000:1c02:c564:cd9c:1f70:1b0b:ed0e[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:24:35	[94m[35mmikey3	[0mEssentially I am trying to resolve several promises aroudn this api that doesn't abstract away the image format and instead uses two different function names
+2020-06-19 13:24:37	[94m[34mThePendulum	[0mso why can't you just return it where you resolve atm?
+2020-06-19 13:24:40	[94m[34mThePendulum	[0mwithout the new promise wrap
+2020-06-19 13:25:14	[0m[38;5;9m[49m<--	[0m[33manovick[0m[38;5;2m[49m ([0m[38;5;6m[49m~anovick@bzq-79-178-19-140.red.bezeqint.net[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 246 seconds[0m[38;5;2m[49m)
+2020-06-19 13:25:19	[94m[35mmikey3	[0mI originally didn't have the return, but now if I want to assign the return value to a variable I might get undefined if hte promise rejects
+2020-06-19 13:25:35	[94m[34mThePendulum	[0mthrow an error :P
+2020-06-19 13:25:53	[94m[34mThePendulum	[0mor return a null value of some sort
+2020-06-19 13:26:28	[94m[34mThePendulum	[0myou can remove new Promise, return [img_width, img_height]; and then in place of the reject throw new Error('...'); and it should be pretty much identical
+2020-06-19 13:26:28	[0m[38;5;9m[49m<--	[0m[95mFranckapik[0m[38;5;2m[49m ([0m[38;5;6m[49m~Franckapi@15.145.200.77.rev.sfr.net[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 260 seconds[0m[38;5;2m[49m)
+2020-06-19 13:26:54	[0m[38;5;9m[49m<--	[0m[96mCrash1hd_[0m[38;5;2m[49m ([0m[38;5;6m[49m~Crash1hd@unaffiliated/crash1hd[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 240 seconds[0m[38;5;2m[49m)
+2020-06-19 13:27:16	[94m[35mmikey3	[0mI was concerned about that, but the 2nd opinion makes me feel better about that design decision thanks
+2020-06-19 13:27:26	[94m[34mThePendulum	[0mor { width, height }, don't think resolve can take more than 1 value argument anyway, but I might be mistaken
+2020-06-19 13:30:40	[0m[38;5;10m[49m-->	[0mLucas_Gray[0m[38;5;2m[49m [[0m[38;5;6m[49mLucas_Gray[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mZNC - https://znc.in[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Wryhder@197.210.29.222[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:31:21	[0m[38;5;10m[49m-->	[0m[92mtonysln[0m[38;5;2m[49m ([0m[38;5;6m[49m...[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~tonysln@238-29-196-88.dyn.estpak.ee[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:35:17	[0m[38;5;10m[49m-->	[0m[34mpootpoot[0m[38;5;2m[49m [[0m[38;5;6m[49mpootpoot[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mnico[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~pootpoot@pool-71-127-211-141.nwrknj.fios.verizon.net[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:37:21	[0m[38;5;9m[49m<--	[0m[34miamtheWraith[0m[38;5;2m[49m ([0m[38;5;6m[49m~iamtheWra@2600:1700:7f0:f150:e418:5ce7:cd2e:a04f[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Remote host closed the connection[0m[38;5;2m[49m)
+2020-06-19 13:37:39	[0m[38;5;10m[49m-->	[0m[34miamtheWraith[0m[38;5;2m[49m ([0m[38;5;6m[49mrealname[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~iamtheWra@2600:1700:7f0:f150:5853:5104:fbe3:3b15[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:39:44	[0m[38;5;10m[49m-->	[0m[35mmat001[0m[38;5;2m[49m [[0m[38;5;6m[49mMat001[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mmpirnovar[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~mat001@116.sub-174-194-141.myvzw.com[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#Node.js[32m
+2020-06-19 13:41:11	[0m[38;5;9m[49m<--	[0m[92mtonysln[0m[38;5;2m[49m ([0m[38;5;6m[49m~tonysln@238-29-196-88.dyn.estpak.ee[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Remote host closed the connection[0m[38;5;2m[49m)
+2020-06-19 13:41:16	[0m[38;5;9m[49m<--	[0m[94mtiin57[0m[38;5;2m[49m ([0m[38;5;6m[49m~tiin57@ec2-3-94-63-186.compute-1.amazonaws.com[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Read error: Connection reset by peer[0m[38;5;2m[49m)

@@ -1,0 +1,50 @@
+2020-06-19 11:49:03	[94m[35mfrabbit	[0mhttps://github.com/minetest/minetest/releases/tag/5.2.0  --  https://github.com/minetest/minetest_game/releases/tag/5.2.0
+2020-06-19 11:50:55	[94m[35mfrabbit	[0mdamn!
+2020-06-19 11:51:29	[94m[35mfrabbit	[0mproblem between chair and screen
+2020-06-19 11:51:33	[94m[35mfrabbit	[0ma fu**!
+2020-06-19 11:51:56	[94m[35mfrabbit	[0min server torches.lua i wrote ignite instead of igniter....
+2020-06-19 11:52:08	[94m[35mfrabbit	[0m(i did this very late)
+2020-06-19 11:52:21	[94mKrock	[0m!next
+2020-06-19 11:52:22	[92m@[94mMinetestBot	[0mAnother satisfied customer. Next!
+2020-06-19 11:52:42	[94m[35mfrabbit	[0mim very sorry... =(
+2020-06-19 11:53:22	[94m[35mfrabbit	[0mmaybe its to much to handle 3 different minetest...
+2020-06-19 11:53:57	[94m[35mfrabbit	[0mor i should use some sync when i do similar things with them...
+2020-06-19 11:56:14	[94m[35mfrabbit	[0mok now it works
+2020-06-19 11:57:48	[94m[35mfrabbit	[0mthese igniters have a big range as it seems...
+2020-06-19 11:59:11	[94mKrock	[0mrange is 1, but fire ignites as well
+2020-06-19 12:02:14	[94m[35mfrabbit	[0mhm.. a torch burned a wodden ladder that was 2 nodes away also a cobble stone node was between them
+2020-06-19 12:02:45	[94m[35mfrabbit	[0mand it was the first thing that were burned by that torch
+2020-06-19 12:03:05	[0m[38;5;10m[49m-->	[0m[35mWuzzy[0m[38;5;2m[49m ([0m[38;5;6m[49mWuzzy[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Wuzzy@p549c9f7a.dip0.t-ipconnect.de[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:11:33	[94m[35mfrabbit	[0mthe server texturepack must named to "server"?
+2020-06-19 12:13:16	[94m[35mfrabbit	[0m ~/minetest/minetest-5.2.0/textures/texture_packs_here.txt -> Put your texture pack folders in this folder. Textures in the "server" pack will be used by the server.
+2020-06-19 12:15:25	[94m[35mfrabbit	[0mi putted a texturepack there, not working, i renamed the pack to server, not working. do i have to specify the path in minetest.conf?
+2020-06-19 12:18:42	[0m[38;5;10m[49m-->	[0m[94mWuzzy2[0m[38;5;2m[49m ([0m[38;5;6m[49mWuzzy[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~Wuzzy@p549c9f7a.dip0.t-ipconnect.de[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:19:07	[0m[38;5;9m[49m<--	[0m[94mWuzzy2[0m[38;5;2m[49m ([0m[38;5;6m[49m~Wuzzy@p549c9f7a.dip0.t-ipconnect.de[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Remote host closed the connection[0m[38;5;2m[49m)
+2020-06-19 12:23:59	[94m[35mfrabbit	[0mman why isnt the mod under_sky in the default game? o_0
+2020-06-19 12:24:25	[0m[38;5;10m[49m-->	[0m[33mNetherEran_[0m[38;5;2m[49m ([0m[38;5;6m[49mrealname[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~eran@092-135-067-156.ip-addr.inexio.net[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:25:13	[0m[38;5;9m[49m<--	[0m[32mawell[0m[38;5;2m[49m ([0m[38;5;6m[49m~apophis@2600:8805:1400:3681::9be6[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 260 seconds[0m[38;5;2m[49m)
+2020-06-19 12:25:33	[0m[38;5;10m[49m-->	[0m[32mawell[0m[38;5;2m[49m [[0m[38;5;6m[49mawell[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mpurple[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~apophis@ip68-10-170-24.hr.hr.cox.net[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:25:36	[94m[35mfrabbit	[0mthat little thing adds a lot of immersion in caves
+2020-06-19 12:27:35	[0m[38;5;9m[49m<--	[0m[33mNetherEran[0m[38;5;2m[49m ([0m[38;5;6m[49m~eran@2a02:6d40:214e:9701:1c1f:4b80:134d:dfbc[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 272 seconds[0m[38;5;2m[49m)
+2020-06-19 12:28:20	[0m[38;5;10m[49m-->	[0m[35mfrabbit_[0m[38;5;2m[49m [[0m[38;5;6m[49mfrabbit[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mfrabbit[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~frabbit@unaffiliated/free-rabbit/x-8401877[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:29:23	[0m[38;5;5m[49m--	[0m[35mfrabbit[0m is now known as [32mGuest23629[0m
+2020-06-19 12:29:23	[0m[38;5;5m[49m--	[0m[35mfrabbit_[0m is now known as [35mfrabbit[0m
+2020-06-19 12:29:35	[94m[35mfrabbit	[0mhmm.. textures not working on server
+2020-06-19 12:30:13	[94m[35mfrabbit	[0mdoesnt matter if i call the pack server or not, or add the full path to minetest.conf or not
+2020-06-19 12:31:26	[0m[38;5;9m[49m<--	[0m[32mGuest23629[0m[38;5;2m[49m ([0m[38;5;6m[49m~frabbit@unaffiliated/free-rabbit/x-8401877[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 264 seconds[0m[38;5;2m[49m)
+2020-06-19 12:34:25	[0m[38;5;10m[49m-->	[0m[33mnalkri[0m[38;5;2m[49m [[0m[38;5;6m[49mElench[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49m@pussipupu:matrix.org[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49mpussipupum@gateway/shell/matrix.org/x-ohqarcldjsowzmsq[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:34:47	[0m[38;5;9m[49m<--	[0m[36mPie-jacker875[0m[38;5;2m[49m ([0m[38;5;6m[49m~quassel@2601:190:580:b1b2::d41[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Read error: Connection reset by peer[0m[38;5;2m[49m)
+2020-06-19 12:35:53	[0m[38;5;10m[49m-->	[0m[36mPie-jacker875[0m[38;5;2m[49m ([0m[38;5;6m[49mPie-jacker875[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~quassel@2601:190:580:b1b2::d41[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:37:33	[0m[38;5;10m[49m-->	[0m[96mredneonglow[0m[38;5;2m[49m [[0m[38;5;6m[49mRedBlade7[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mThe Legend[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~redblade7@gateway/tor-sasl/redblade7[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 12:39:55	[94m[35mfrabbit	[0mso wiki is wrong again: https://wiki.minetest.net/MinetestEDU/Define_the_Texture_Pack_on_a_server
+2020-06-19 12:40:05	[0m[38;5;9m[49m<--	[0m[32mawell[0m[38;5;2m[49m ([0m[38;5;6m[49m~apophis@ip68-10-170-24.hr.hr.cox.net[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 246 seconds[0m[38;5;2m[49m)
+2020-06-19 12:40:13	[94m[35mfrabbit	[0m(and why the heck is it in french?...o_0)
+2020-06-19 13:10:42	[0m[38;5;10m[49m-->	[0m[33mcalcul0n_[0m[38;5;2m[49m [[0m[38;5;6m[49mcalcul0n[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mrealname[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~calcul0n@2a01:e0a:150:6030:6fb0:f963:349f:1e41[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 13:11:51	[0m[38;5;9m[49m<--	[0m[33mssorbom[m][0m[38;5;2m[49m ([0m[38;5;6m[49mssorbommat@gateway/shell/matrix.org/x-uenpiipyjshuovsv[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Quit: Idle for 30+ days[0m[38;5;2m[49m)
+2020-06-19 13:13:13	[0m[38;5;9m[49m<--	[0m[33mcalcul0n[0m[38;5;2m[49m ([0m[38;5;6m[49m~calcul0n@2a01:e0a:150:6030:4ae3:2660:1ce9:a6bb[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 272 seconds[0m[38;5;2m[49m)
+2020-06-19 13:19:40	[0m[38;5;10m[49m-->	[0m[35mfrabbit_[0m[38;5;2m[49m [[0m[38;5;6m[49mfrabbit[0m[38;5;2m[49m][0m[38;5;2m[49m ([0m[38;5;6m[49mfrabbit[0m[38;5;2m[49m)[0m[38;5;2m[49m ([0m[38;5;6m[49m~frabbit@unaffiliated/free-rabbit/x-8401877[0m[38;5;2m[49m)[32m has joined [0m[38;5;15m[49m#minetest[32m
+2020-06-19 13:23:03	[0m[38;5;9m[49m<--	[0m[35mfrabbit[0m[38;5;2m[49m ([0m[38;5;6m[49m~frabbit@unaffiliated/free-rabbit/x-8401877[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 264 seconds[0m[38;5;2m[49m)
+2020-06-19 13:26:13	[0m[38;5;5m[49m--	[0m[35mfrabbit_[0m is now known as [35mfrabbit[0m
+2020-06-19 13:26:26	[94m[0m[38;5;15m[49mSeirdy	[0manybody know good mods for Technic? I know many mods support Technic recipes, but I'm interested in mods that take advantage of its electricity mechanic. I know of powerbanks and the autoseeder mods.
+2020-06-19 13:26:55	[0m[38;5;9m[49m<--	[0m[92mkollaps[m][0m[38;5;2m[49m ([0m[38;5;6m[49mkollapsdat@gateway/shell/matrix.org/x-ujtjrdlgzxllitpy[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Quit: Idle for 30+ days[0m[38;5;2m[49m)
+2020-06-19 13:39:14	[0m[38;5;9m[49m<--	[0m[35mWuzzy[0m[38;5;2m[49m ([0m[38;5;6m[49m~Wuzzy@p549c9f7a.dip0.t-ipconnect.de[0m[38;5;2m[49m)[31m has quit [0m[38;5;2m[49m(Ping timeout: 240 seconds[0m[38;5;2m[49m)

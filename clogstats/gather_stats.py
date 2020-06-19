@@ -81,15 +81,20 @@ def analyze_log(
 
 
 def log_paths(
-    exclude_channels: Collection[str] = None, include_channels: Collection[str] = None,
+    exclude_channels: Collection[str] = None,
+    include_channels: Collection[str] = None,
+    log_dir: str = None,
 ) -> Iterator[Path]:
     """Get all the .weechatlog paths to analyze for the current user."""
-    try:
-        weechat_home = Path(environ["WEECHAT_HOME"])
-    except KeyError:
-        weechat_home = Path.home() / ".weechat"
-    log_dir = weechat_home / "logs"
-    for path in log_dir.glob("irc.*.[#]*.weechatlog"):
+    if log_dir:
+        log_path = Path(log_dir)
+    else:
+        try:
+            weechat_home = Path(environ["WEECHAT_HOME"])
+        except KeyError:
+            weechat_home = Path.home() / ".weechat"
+        log_path = weechat_home / "logs"
+    for path in log_path.glob("irc.*.[#]*.weechatlog"):
         if (exclude_channels is None or path.name[4:-11] not in exclude_channels) and (
             not include_channels or path.name[4:-11] in include_channels
         ):
@@ -114,12 +119,13 @@ def analyze_log_wrapper(args: AnalyzeLogArgs) -> IRCChannel:
     )
 
 
-def analyze_all_logs(
+def analyze_all_logs(  # noqa: R0913
     date_range: DateRange,
     include_channels: Collection[str] = None,
     exclude_channels: Collection[str] = None,
     nick_blacklists: Mapping[str, Set[str]] = None,
     sortkey: str = "msgs",
+    log_dir: str = None,
 ) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
     # set default values for optional arguments
@@ -140,7 +146,9 @@ def analyze_all_logs(
             ),
         )
         for path in log_paths(
-            exclude_channels=exclude_channels, include_channels=include_channels,
+            exclude_channels=exclude_channels,
+            include_channels=include_channels,
+            log_dir=log_dir,
         )
     )
     with Pool() as pool:
