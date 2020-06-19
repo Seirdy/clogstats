@@ -18,21 +18,39 @@ clogstats = "clogstats.cli:main"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
-flake8 = "^3.8.3"
 flake8-bandit = "^2.1.2"
 flake8-bugbear = "^20.1.4"
 flake8-black = "^0.2.0"
 safety = "^1.9.0"
 pylint = "^2.5.3"
 mypy = "^0.780"
+flakehell = "^0.5.0"
+isort = {extras = ["pyproject"], version = "^4.3.21"}
+flake8-isort = "^3.0.0"
 
-[tool.pylint.'MESSAGES CONTROL']
-disable = ["line-too-long", "bad-continuation"]
+[tool.pylint.messages_control]
+disable = "C0330, C0326"
+
+[tool.pylint.format]
+max-line-length = "88"
+
+[tool.flakehell]
+format = "grouped"
+max_line_length = 88
+show_source = false
+
+[tool.flakehell.plugins]
+flake8-bandit = ["+*"]
+flake8-black = ["+*"]
+flake8-bugbear = ["+*"]
+flake8-isort = ["+*"]
+mccabe = ["+*"]
+pycodestyle = ["+*", "-E501", "-W503"]
+pyflakes = ["+*"]
+pylint = ["+*", "-C0330", "-C0326"]
 
 [tool.isort]
 line_length = 88
-# force_single_line = true
-atomic = true
 include_trailing_comma = true
 lines_after_imports = 2
 lines_between_types = 1

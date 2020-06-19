@@ -133,7 +133,7 @@ def main():
             channel.name,
             str(channel.msgs),
             str(channel.nicks),
-            # TopWords: the top 3 most active members of a channel with their # of messages
+            # TopWords: channel's most active members with msgcount
             ", ".join(
                 (
                     f"{nick}: {score}"
@@ -145,7 +145,8 @@ def main():
         if args.num is None or ranking <= args.num
     ]
     full_table = [column_headings] + table_rows
-    # pretty-print that table with aligned columns; like `column -t` from BSD and util-linux
+    # pretty-print that table with aligned columns
+    # like `column -t` from BSD and util-linux
     column_widths = [max(map(len, col)) for col in zip(*full_table)]
     for row in full_table:
         print(" ".join((cell.ljust(width) for cell, width in zip(row, column_widths))))
