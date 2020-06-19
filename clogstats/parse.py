@@ -8,7 +8,7 @@ import pandas as pd  # type: ignore  # mypy doesn't have type stubs for pandas y
 
 
 ANSI_ESCAPE = r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]"
-NICK_PREFIXES = {"+", "%", "@", "~", "&"}
+NICK_PREFIXES = frozenset(("+", "%", "@", "~", "&"))
 
 
 def strip_nick_prefix(nick: Optional[str]) -> Optional[str]:
@@ -61,10 +61,9 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     )
     # convert timestamp column to pandas datetime
     logfile_df["timestamps"] = pd.to_datetime(
-        logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S"
+        logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S",
     )
     # remove ANSI color escape codes from prefix column
-    # logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "")
     logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "")
     # this is time-series data. set timestamp column to index
     logfile_df.set_index("timestamps")
@@ -76,14 +75,12 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     logfile_df["nicks"] = logfile_df["prefixes"]
     logfile_df.loc[logfile_df["msg_types"] != "message", "nicks"] = None
     logfile_df["nicks"] = logfile_df["nicks"].apply(
-        strip_nick_prefix
+        strip_nick_prefix,
     )  # strip nick prefixes like "+", "@"
     # add nicks to msgtypes join, leave, and action
     is_join_leave_action: pd.Series = logfile_df["msg_types"].isin(
-        {"join", "leave", "action"}
+        {"join", "leave", "action"},
     )
-    # join_leave_action_nicks: pd.DataFrame = logfile_df.loc[is_join_leave_action, "nicks"]
-    # join_leave_action_bodies: pd.DataFrame = logfile_df.loc[is_join_leave_action, "bodies"]
     logfile_df.loc[is_join_leave_action, "nicks"] = (
         logfile_df.loc[is_join_leave_action, "bodies"]
         .apply(lambda body: body.split()[0])
@@ -95,8 +92,7 @@ def read_all_lines(path: Path) -> pd.DataFrame:
 def read_in_range(path: Path, date_range: DateRange) -> pd.DataFrame:
     """Find all IRC messages within date_range for path."""
     logfile_df: pd.DataFrame = read_all_lines(path)
-    logfile_df = logfile_df[
+    return logfile_df[
         (logfile_df["timestamps"] > date_range.start_time)
         & (logfile_df["timestamps"] < date_range.end_time)
     ]
-    return logfile_df

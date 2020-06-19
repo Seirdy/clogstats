@@ -5,38 +5,33 @@ from dataclasses import dataclass
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
-from typing import (
-    Collection,
-    Counter,
-    Dict,
-    Iterator,
-    List,
-    Mapping,
-    NamedTuple,
-    Optional,
-    Set,
-)
+from types import MappingProxyType
+from typing import Collection, Counter, Iterator, List, Mapping, NamedTuple, Set
 
 import pandas as pd  # type: ignore
 
 from clogstats.parse import DateRange, read_in_range
 
 
-BOT_BLACKLISTS: Dict[str, Set[str]] = {
-    "2600net": {"jarvis", "gbot"},
-    "darkscience": {"zeta"},
-    "efnet": {"pelosi"},
-    "freenode": {"mockturtle", "weebot", "imoutobot", "wlb1"},
-    "gitter": {"gitter"},
-    "gotham": {"mafalda", "southbay", "damon"},
-    "rizon": {"internets", "chanstat", "yt-info"},
-    "tilde_chat": {"bitbot"},
-    "snoonet": {"gonzobot", "jesi", "shinymetal", "subwatch", "nsa"},
-    "supernets": {"scroll", "cancer", "faggotxxx", "fuckyou"},
-}
+BOT_BLACKLISTS: Mapping[str, Set[str]] = MappingProxyType(
+    {
+        "2600net": {"jarvis", "gbot"},
+        "darkscience": {"zeta"},
+        "efnet": {"pelosi"},
+        "freenode": {"mockturtle", "weebot", "imoutobot", "wlb1"},
+        "gitter": {"gitter"},
+        "gotham": {"mafalda", "southbay", "damon"},
+        "rizon": {"internets", "chanstat", "yt-info"},
+        "tilde_chat": {"bitbot"},
+        "snoonet": {"gonzobot", "jesi", "shinymetal", "subwatch", "nsa"},
+        "supernets": {"scroll", "cancer", "faggotxxx", "fuckyou"},
+    }
+)
 
 # example logfile: "irc.freenode.#python.weechatlog"
-LOGFILE_REGEX = re.compile(r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)")
+LOGFILE_REGEX: re.Pattern = re.compile(
+    r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)"
+)
 
 
 @dataclass
@@ -53,7 +48,7 @@ class IRCChannel:
 
 
 def analyze_log(
-    path: Path, date_range: DateRange, nick_blacklist: Optional[Set[str]] = None
+    path: Path, date_range: DateRange, nick_blacklist: Set[str] = None,
 ) -> IRCChannel:
     """Turn a path to a log file into an IRCChannel holding its stats.
 
@@ -71,7 +66,7 @@ def analyze_log(
     # topwords
     # we want nicks for messages and actions.
     nicks: pd.DataFrame = logfile_df.loc[
-        logfile_df["msg_types"].isin({"message", "action"}), "nicks"
+        logfile_df["msg_types"].isin({"message", "action"}), "nicks",
     ]
     # multiple consecutive messages from one nick should be grouped together
     nicks = nicks.loc[nicks.shift(1) != nicks]
@@ -82,11 +77,11 @@ def analyze_log(
 
     # total messages
     msgs = nick_counts.sum()
-    return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs,)
+    return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs)
 
 
 def log_paths(
-    exclude_channels: Collection[str] = None, include_channels: Collection[str] = None
+    exclude_channels: Collection[str] = None, include_channels: Collection[str] = None,
 ) -> Iterator[Path]:
     """Get all the .weechatlog paths to analyze for the current user."""
     try:
@@ -96,10 +91,7 @@ def log_paths(
     log_dir = weechat_home / "logs"
     for path in log_dir.glob("irc.*.[#]*.weechatlog"):
         if (exclude_channels is None or path.name[4:-11] not in exclude_channels) and (
-            include_channels is None
-            or len(include_channels) == 0
-            or path.name[4:-11]  # strip out leading "irc.", trailing ".weechatlog"
-            in include_channels
+            not include_channels or path.name[4:-11] in include_channels
         ):
             yield path
 
@@ -118,7 +110,7 @@ def analyze_log_wrapper(args: AnalyzeLogArgs) -> IRCChannel:
     This is a global function to make it easier to parallelize.
     """
     return analyze_log(
-        path=args.path, date_range=args.date_range, nick_blacklist=args.nick_blacklist
+        path=args.path, date_range=args.date_range, nick_blacklist=args.nick_blacklist,
     )
 
 
@@ -148,10 +140,9 @@ def analyze_all_logs(
             ),
         )
         for path in log_paths(
-            exclude_channels=exclude_channels, include_channels=include_channels
+            exclude_channels=exclude_channels, include_channels=include_channels,
         )
     )
-    # return [analyze_log_wrapper(args) for args in analyze_log_args]
     with Pool() as pool:
         return sorted(
             pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),

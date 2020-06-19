@@ -2,7 +2,7 @@
 import argparse
 
 from datetime import datetime, timedelta
-from typing import Collection, Dict, List, Optional, Set
+from typing import Collection, Dict, List, Set
 
 from clogstats.gather_stats import DateRange, analyze_all_logs
 
@@ -10,7 +10,7 @@ from clogstats.gather_stats import DateRange, analyze_all_logs
 def parse_args() -> argparse.Namespace:
     """Parse CLI options."""
     parser = argparse.ArgumentParser(
-        description="Gather statistics from WeeChat log files."
+        description="Gather statistics from WeeChat log files.",
     )
     parser.add_argument(
         "-d",
@@ -95,11 +95,12 @@ def main():
     # get user-supplied parameters
     args = parse_args()
     end_time = datetime.now()
-    start_time = end_time - timedelta(hours=args.duration)
-    date_range = DateRange(start_time=start_time, end_time=end_time)
+    date_range = DateRange(
+        start_time=end_time - timedelta(hours=args.duration), end_time=end_time,
+    )
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
-    nick_blacklists: Optional[Dict[str, Set[str]]] = None
+    nick_blacklists: Dict[str, Set[str]] = None
     if args.disable_bot_filters:
         nick_blacklists = {}
 
@@ -137,7 +138,7 @@ def main():
                 (
                     f"{nick}: {score}"
                     for nick, score in channel.topwords.most_common(args.max_topwords)
-                )
+                ),
             ),
         )
         for ranking, channel in enumerate(collected_stats, start=1)
@@ -146,5 +147,5 @@ def main():
     full_table = [column_headings] + table_rows
     # pretty-print that table with aligned columns; like `column -t` from BSD and util-linux
     column_widths = [max(map(len, col)) for col in zip(*full_table)]
-    for line in full_table:
-        print(" ".join((val.ljust(width) for val, width in zip(line, column_widths))))
+    for row in full_table:
+        print(" ".join((cell.ljust(width) for cell, width in zip(row, column_widths))))
