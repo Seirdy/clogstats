@@ -152,8 +152,11 @@ def analyze_all_logs(  # noqa: R0913
         )
     )
     with Pool() as pool:
-        return sorted(
+        output_data = sorted(
             pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
             key=lambda channel: channel.__getattribute__(sortkey),
             reverse=True,
         )
+        pool.close()
+        pool.join()
+        return output_data

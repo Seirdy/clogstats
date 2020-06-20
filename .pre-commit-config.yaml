@@ -14,24 +14,35 @@ repos:
         language: system
         files: ^pyproject\.toml$
         pass_filenames: false
+
       - id: isort
         name: isort
         entry: poetry run isort
         language: system
         types: [python]
+
       - id: black
         name: black
-        entry: poetry run black
+        entry: poetry run black .
         language: system
         types: [python]
+
       - id: flakehell
         name: flakehell
         entry: poetry run flakehell lint
         language: system
         types: [python]
+
       - id: mypy
         name: mypy
         entry: poetry run mypy .
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pytest
+        name: pytest
+        entry: poetry run pytest
         language: system
         types: [python]
         pass_filenames: false

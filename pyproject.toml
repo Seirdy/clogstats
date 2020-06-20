@@ -32,9 +32,9 @@ safety = "^1.9.0"
 pylint = "^2.5.3"
 mypy = "^0.780"
 pre-commit = "^2.5.1"  # run all formatting/linting/tests before each commit
-
-[tool.pylint.messages_control]
-disable = "C0330, C0326"
+pytest = "^5.4.3"
+pytest-cov = "^2.10.0"
+coverage = {extras = ["toml"], version = "^5.1"}
 
 [tool.pylint.format]
 max-line-length = "88"
@@ -55,6 +55,10 @@ pycodestyle = ["+*", "-E501", "-W503"]
 pyflakes = ["+*"]
 pylint = ["+*", "-C0330", "-C0326"]
 
+[tool.flakehell.exceptions."tests/"]
+flake8-bandit = ["-S101"]
+pylint = ["-C0116"]
+
 [tool.isort]
 exclude = ["build", "dist", "*.egg-info", ".git", "ignore", ".cache", ".mypy_cache"]
 line_length = 88
@@ -67,11 +71,18 @@ use_parentheses = true
 known_first_party = "clogstats"
 known_third_party = [
 	"pandas",
+	"pytest",
 ]
+known_standard_library = "dataclasses"  # use backport on py36, stdlib otherwise
 
 [tool.black]
 line-length = 88
 target-version = ['py36', 'py37', 'py38']
+
+[tool.coverage.run]
+# omit = ["build", "dist", "*.egg-info", ".git", "ignore", ".cache", ".mypy_cache"]
+include = ["clogstats/*"]
+concurrency = ["multiprocessing"]
 
 [build-system]
 requires = ["poetry>=0.12"]
