@@ -2,7 +2,7 @@
 import argparse
 
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, Iterator, List, Optional, Set, Tuple
 
 from clogstats.gather_stats import DateRange, analyze_all_logs
 
@@ -160,11 +160,20 @@ def result_table() -> List[Row]:
     return [column_headings] + table_rows
 
 
+def calculate_padding_size(table: List[Row]) -> Iterator[int]:
+    """Calculate padding to add to each cell in a table for alignment."""
+    for col_number, col in enumerate(zip(*table)):
+        if (col_number + 1) % 5 != 0:  # don't add padding to last column
+            yield max(map(len, col))
+        else:
+            yield 0
+
+
 def main():
     """Generate a table of results and pretty-print them."""
     full_table: List[Row] = result_table()
     # pretty-print that table with aligned columns
     # like `column -t` from BSD and util-linux
-    column_widths: List[int] = [max(map(len, col)) for col in zip(*full_table)]
+    padding_sizes = list(calculate_padding_size(full_table))
     for row in full_table:
-        print(" ".join((cell.ljust(width) for cell, width in zip(row, column_widths))))
+        print(" ".join((cell.ljust(width) for cell, width in zip(row, padding_sizes))))
