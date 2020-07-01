@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import NamedTuple, Optional
 
+import numpy as np  # type: ignore
 import pandas as pd  # type: ignore  # mypy doesn't have type stubs for pandas yet.
 
 
@@ -30,8 +31,8 @@ def msg_type(prefix: str) -> str:
     try:
         return {
             "=!=": "error",
-            "--": "network",
-            " *": "action",
+            "--": "network",  # e.g., changing channel topic
+            " *": "action",  # usually created with the "/me" cmd.
             "-->": "join",
             "<--": "quit",
             "": "other",  # empty string = no prefix: other. rarely occurs in the wild.
@@ -45,9 +46,9 @@ class DateRange(NamedTuple):
     """A time range used to select the part of a log file we want to analyze."""
 
     # IRC didn't exist on 0001-01-01 CE [citation needed]
-    start_time: datetime = datetime.min
+    start_time: np.datetime64 = np.datetime64(datetime.min)
     # if civilization is a thing at datetime.max, I hope nobody runs this.
-    end_time: datetime = datetime.max
+    end_time: np.datetime64 = np.datetime64(datetime.max)
 
 
 def read_all_lines(path: Path) -> pd.DataFrame:
@@ -61,7 +62,7 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     )
     # convert timestamp column to pandas datetime
     logfile_df["timestamps"] = pd.to_datetime(
-        logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S",
+        logfile_df["timestamps"], format="%Y-%m-%d %H:%M:%S",  # noqa: WPS323
     )
     # remove ANSI color escape codes from prefix column
     logfile_df["prefixes"] = logfile_df["prefixes"].str.replace(ANSI_ESCAPE, "")
@@ -87,12 +88,3 @@ def read_all_lines(path: Path) -> pd.DataFrame:
         .str.replace(ANSI_ESCAPE, "")
     )
     return logfile_df
-
-
-def read_in_range(path: Path, date_range: DateRange) -> pd.DataFrame:
-    """Find all IRC messages within date_range for path."""
-    logfile_df: pd.DataFrame = read_all_lines(path)
-    return logfile_df[
-        (logfile_df["timestamps"] > date_range.start_time)
-        & (logfile_df["timestamps"] < date_range.end_time)
-    ]

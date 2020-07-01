@@ -6,11 +6,20 @@ from multiprocessing import Pool
 from os import environ
 from pathlib import Path
 from types import MappingProxyType
-from typing import Collection, Counter, Iterator, List, Mapping, NamedTuple, Set
+from typing import (
+    Collection,
+    Counter,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    NamedTuple,
+    Set,
+)
 
 import pandas as pd  # type: ignore
 
-from clogstats.parse import DateRange, read_in_range
+from clogstats.parse import DateRange, read_all_lines
 
 
 BOT_BLACKLISTS: Mapping[str, Set[str]] = MappingProxyType(
@@ -48,20 +57,26 @@ class IRCChannel:
 
 
 def analyze_log(
-    path: Path, date_range: DateRange, nick_blacklist: Set[str] = None,
+    logfile_df: pd.DataFrame,
+    date_range: DateRange,
+    name: str,
+    nick_blacklist: Set[str] = None,
 ) -> IRCChannel:
-    """Turn a path to a log file into an IRCChannel holding its stats.
+    """Turn a parsed log file into an IRCChannel holding its stats.
 
     This function takes multiple arguments, which makes calling it in a
     single-variable multithreaded map() function tricky. It gets wrapped
     by analyze_log_wrapper which unpacks a single arument into this
     function.
     """
+    # filter date range
+    logfile_df = logfile_df[
+        (logfile_df["timestamps"] > date_range.start_time)
+        & (logfile_df["timestamps"] < date_range.end_time)
+    ]
     if not nick_blacklist:
         nick_blacklist = set()
     # the values we'll extract to build the IRCChannel
-    name = path.name[4:-11]  # strip off the "irc." prefix and ".weechatlog" suffix
-    logfile_df = read_in_range(path, date_range)
 
     # topwords
     # we want nicks for messages and actions.
@@ -78,6 +93,67 @@ def analyze_log(
     # total messages
     msgs = nick_counts.sum()
     return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs)
+
+
+class AnalyzeLogArgs(NamedTuple):
+    """Container for the args to unpack and pass to analyze_log."""
+
+    logfile_df: pd.DataFrame
+    date_range: DateRange
+    name: str
+    nick_blacklist: Set[str] = set()
+
+
+def analyze_log_wrapper(args: AnalyzeLogArgs) -> IRCChannel:
+    """Run analyze_log on unpacked arguments.
+
+    This is a global function to make it easier to parallelize.
+    """
+    return analyze_log(
+        logfile_df=args.logfile_df,
+        date_range=args.date_range,
+        name=args.name,
+        nick_blacklist=args.nick_blacklist,
+    )
+
+
+# ParsedLogs is a mapping of a channel name to its parsed DataFrame
+ParsedLogs = Mapping[str, pd.DataFrame]
+
+
+def analyze_multiple_logs(  # noqa: R0913
+    date_range: DateRange,
+    parsed_logs: ParsedLogs,
+    nick_blacklists: Mapping[str, Set[str]] = None,
+    sortkey: str = "msgs",
+) -> List[IRCChannel]:
+    """Gather stats on multiple parsed logs in parallel."""
+    # set default values for optional arguments
+    if nick_blacklists is None:
+        nick_blacklists = BOT_BLACKLISTS
+
+    # set the arguments for each run of analyze_log_wrapper
+    # for all the channels we want to analyze
+    analyze_log_args: Iterator[AnalyzeLogArgs] = (
+        AnalyzeLogArgs(
+            logfile_df=parsed_logs[channel_name],
+            date_range=date_range,
+            name=channel_name,
+            nick_blacklist=nick_blacklists.get(channel_name.split(".#", 1)[0], set(),),
+        )
+        for channel_name in parsed_logs
+    )
+    with Pool() as pool:
+        output_data = sorted(
+            pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
+            key=lambda channel: channel.__getattribute__(sortkey),
+            reverse=True,
+        )
+        # explicitly call close() and join() for coverage.py to work
+        # otherwise redundant due to `with` statement
+        pool.close()
+        pool.join()
+        return output_data
 
 
 def log_paths(
@@ -101,22 +177,9 @@ def log_paths(
             yield path
 
 
-class AnalyzeLogArgs(NamedTuple):
-    """Container for the args to unpack and pass to analyze_log."""
-
-    path: Path
-    date_range: DateRange
-    nick_blacklist: Set[str] = set()
-
-
-def analyze_log_wrapper(args: AnalyzeLogArgs) -> IRCChannel:
-    """Run analyze_log on unpacked arguments.
-
-    This is a global function to make it easier to parallelize.
-    """
-    return analyze_log(
-        path=args.path, date_range=args.date_range, nick_blacklist=args.nick_blacklist,
-    )
+def parse_multiple_logs(paths: Iterable[Path]) -> ParsedLogs:
+    """Return a dict mapping a channel name to its parsed DataFrame."""
+    return {path.name[4:-11]: read_all_lines(path) for path in paths}
 
 
 def analyze_all_logs(  # noqa: R0913
@@ -129,36 +192,18 @@ def analyze_all_logs(  # noqa: R0913
 ) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
     # set default values for optional arguments
-    if nick_blacklists is None:
-        nick_blacklists = BOT_BLACKLISTS
-
-    # set the arguments for each run of analyze_log_wrapper
-    # for all the channels we want to analyze
-    analyze_log_args: Iterator[AnalyzeLogArgs] = (
-        AnalyzeLogArgs(
-            path=path,
-            date_range=date_range,
-            nick_blacklist=nick_blacklists.get(
-                # mypy false positive: log_paths() filters paths against
-                # a glob equivalent to our regex; we are guaranteed a match.
-                LOGFILE_REGEX.search(path.name).group(1),  # type: ignore[union-attr]
-                set(),
-            ),
-        )
-        for path in log_paths(
+    parsed_logs = parse_multiple_logs(
+        log_paths(
             exclude_channels=exclude_channels,
             include_channels=include_channels,
             log_dir=log_dir,
         )
     )
-    with Pool() as pool:
-        output_data = sorted(
-            pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
-            key=lambda channel: channel.__getattribute__(sortkey),
-            reverse=True,
-        )
-        # explicitly call close() and join() for coverage.py to work
-        # otherwise redundant due to `with` statement
-        pool.close()
-        pool.join()
-        return output_data
+    # set the arguments for each run of analyze_log_wrapper
+    # for all the channels we want to analyze
+    return analyze_multiple_logs(
+        date_range=date_range,
+        parsed_logs=parsed_logs,
+        nick_blacklists=nick_blacklists,
+        sortkey=sortkey,
+    )
