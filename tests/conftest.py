@@ -11,11 +11,11 @@ from clogstats.parse import DateRange
 def date_range() -> DateRange:
     """Date range for sample logs."""
     start_time = datetime.strptime(
-        "2020-06-19 12:46:00", "%Y-%m-%d %H:%M:%S"
-    )  # noqa: WPS323
+        "2020-06-19 12:46:00", "%Y-%m-%d %H:%M:%S",  # noqa: WPS323
+    )
     end_time = datetime.strptime(
-        "2020-06-19 13:43:00", "%Y-%m-%d %H:%M:%S"
-    )  # noqa: WPS323
+        "2020-06-19 13:43:00", "%Y-%m-%d %H:%M:%S",  # noqa: WPS323
+    )
     return DateRange(start_time=start_time, end_time=end_time)
 
 

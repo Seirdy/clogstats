@@ -8,6 +8,7 @@ import pandas as pd  # type: ignore
 
 from clogstats.gather_stats import (
     IRCChannel,
+    NickBlacklist,
     ParsedLogs,
     analyze_multiple_logs,
     parse_all_logs,
@@ -29,25 +30,25 @@ def data_to_dataframe(
 
 
 @dataclass
-class AnalyzeAllLogsArgs:
+class AnalyzeMultipleLogsArgs:
     """Arguments to pass to AnalyzeAllLogs, excluding date_range."""
 
     parsed_logs: ParsedLogs
     sortkey: str = "msgs"
-    nick_blacklists: Optional[Mapping[str, Set[str]]] = None
+    nick_blacklists: Optional[NickBlacklist] = None
 
 
 def divide_date_range(date_range: DateRange, intervals: int) -> List[DateRange]:
     """Divide date_range into a number of equal intervals."""
     delta = (date_range.end_time - date_range.start_time) / intervals
-    dates = date_range.start_time + range(0, intervals) * np.array([delta] * intervals)
-    return [
-        DateRange(*interval) for interval in np.column_stack((dates[:-1], dates[1:]))
-    ]
+    deltas = range(0, intervals) * np.array([delta] * intervals)
+    dates = date_range.start_time + deltas
+    date_pairs = np.column_stack((dates[:-1], dates[1:]))
+    return [DateRange(*interval) for interval in date_pairs]
 
 
 def rerun_analysis_across_intervals(
-    analyze_all_logs_args: AnalyzeAllLogsArgs,
+    analyze_all_logs_args: AnalyzeMultipleLogsArgs,
     date_range: DateRange,
     intervals: int = 0,
 ) -> Iterator[pd.DataFrame]:
@@ -61,7 +62,7 @@ def rerun_analysis_across_intervals(
 
 
 def aggregate_timeseries_data(
-    analyze_all_logs_args: AnalyzeAllLogsArgs,
+    analyze_all_logs_args: AnalyzeMultipleLogsArgs,
     date_range: DateRange,
     intervals: int = 0,
 ) -> pd.DataFrame:
@@ -75,7 +76,7 @@ def aggregate_timeseries_data(
     )
 
 
-def aggregate_all_timeseries_data(
+def aggregate_all_timeseries_data(  # noqa: R0913, WPS211 # this is a wrapper function
     date_range: DateRange,
     exclude_channels: Collection[str] = None,
     include_channels: Collection[str] = None,
@@ -90,7 +91,7 @@ def aggregate_all_timeseries_data(
         exclude_channels=exclude_channels,
         log_dir=log_dir,
     )
-    analyze_multiple_logs_args = AnalyzeAllLogsArgs(
+    analyze_multiple_logs_args = AnalyzeMultipleLogsArgs(
         parsed_logs=parsed_logs, sortkey=sortkey, nick_blacklists=nick_blacklists,
     )
     return aggregate_timeseries_data(

@@ -22,7 +22,8 @@ import pandas as pd  # type: ignore
 from clogstats.parse import DateRange, read_all_lines
 
 
-BOT_BLACKLISTS: Mapping[str, Set[str]] = MappingProxyType(
+NickBlacklist = Mapping[str, Set[str]]
+BOT_BLACKLISTS: NickBlacklist = MappingProxyType(
     {
         "2600net": {"jarvis", "gbot"},
         "darkscience": {"zeta"},
