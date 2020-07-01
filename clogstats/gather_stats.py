@@ -25,12 +25,12 @@ BOT_BLACKLISTS: Mapping[str, Set[str]] = MappingProxyType(
         "tilde_chat": {"bitbot"},
         "snoonet": {"gonzobot", "jesi", "shinymetal", "subwatch", "nsa"},
         "supernets": {"scroll", "cancer", "faggotxxx", "fuckyou"},
-    }
+    },
 )
 
 # example logfile: "irc.freenode.#python.weechatlog"
 LOGFILE_REGEX: re.Pattern = re.compile(
-    r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)"
+    r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)",
 )
 
 
@@ -157,6 +157,8 @@ def analyze_all_logs(  # noqa: R0913
             key=lambda channel: channel.__getattribute__(sortkey),
             reverse=True,
         )
+        # explicitly call close() and join() for coverage.py to work
+        # otherwise redundant due to `with` statement
         pool.close()
         pool.join()
         return output_data

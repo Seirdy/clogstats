@@ -102,29 +102,28 @@ def parse_args() -> argparse.Namespace:
 Row = Tuple[str, str, str, str, str]
 
 
-def result_table() -> List[Row]:
+def result_table(parsed_args: argparse.Namespace) -> List[Row]:
     """Run clogstats_forecasting from the CLI and dump the results."""
     # get user-supplied parameters
-    args = parse_args()
     end_time = datetime.now()
     date_range = DateRange(
-        start_time=end_time - timedelta(hours=args.duration), end_time=end_time,
+        start_time=end_time - timedelta(hours=parsed_args.duration), end_time=end_time,
     )
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
     nick_blacklists: Optional[Dict[str, Set[str]]] = None
-    if args.disable_bot_filters:
+    if parsed_args.disable_bot_filters:
         nick_blacklists = {}
 
     # collect the stats.
     # convert channels to include/exclude to sets for better lookup.
     collected_stats = analyze_all_logs(
         date_range=date_range,
-        include_channels=set(args.include_channels),
-        exclude_channels=set(args.exclude_channels),
+        include_channels=set(parsed_args.include_channels),
+        exclude_channels=set(parsed_args.exclude_channels),
         nick_blacklists=nick_blacklists,
-        sortkey=args.sort_by,
-        log_dir=args.log_dir,
+        sortkey=parsed_args.sort_by,
+        log_dir=parsed_args.log_dir,
     )
 
     # display total message count
@@ -136,7 +135,8 @@ def result_table() -> List[Row]:
     collected_stats = [
         channel
         for channel in collected_stats
-        if channel.msgs >= args.min_activity and channel.nicks >= args.min_nicks
+        if channel.msgs >= parsed_args.min_activity
+        and channel.nicks >= parsed_args.min_nicks
     ]
     column_headings: Row = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
     table_rows: List[Row] = [
@@ -150,17 +150,19 @@ def result_table() -> List[Row]:
             ", ".join(
                 (
                     f"{nick}: {score}"
-                    for nick, score in channel.topwords.most_common(args.max_topwords)
+                    for nick, score in channel.topwords.most_common(
+                        parsed_args.max_topwords,
+                    )
                 ),
             ),
         )
         for ranking, channel in enumerate(collected_stats, start=1)
-        if args.num is None or ranking <= args.num
+        if parsed_args.num is None or ranking <= parsed_args.num
     ]
     return [column_headings] + table_rows
 
 
-def calculate_padding_size(table: List[Row]) -> Iterator[int]:
+def padding_sizes(table: List[Row]) -> Iterator[int]:
     """Calculate padding to add to each cell in a table for alignment."""
     for col_number, col in enumerate(zip(*table)):
         if (col_number + 1) % 5 != 0:  # don't add padding to last column
@@ -170,10 +172,14 @@ def calculate_padding_size(table: List[Row]) -> Iterator[int]:
 
 
 def main():
-    """Generate a table of results and pretty-print them."""
-    full_table: List[Row] = result_table()
-    # pretty-print that table with aligned columns
-    # like `column -t` from BSD and util-linux
-    padding_sizes = list(calculate_padding_size(full_table))
+    """Generate a table of results and print it with aligned columns.
+
+    Alignment mimics the `column` utility from BSD and util-linux.
+    """
+    full_table: List[Row] = result_table(parse_args())
     for row in full_table:
-        print(" ".join((cell.ljust(width) for cell, width in zip(row, padding_sizes))))
+        row_cells = (
+            cell.ljust(width)
+            for cell, width in zip(row, list(padding_sizes(full_table)))
+        )
+        print(" ".join(row_cells))

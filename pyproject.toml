@@ -23,11 +23,8 @@ black = "^19.10b0"
 isort = {extras = ["pyproject"], version = "^4.3.21"}
 # linters
 flakehell = "^0.5.0"  # nice output for pylint + flake8, configured in pyproject.toml
-flake8-isort = "^3.0.0"
-pep8-naming = "^0.11.1"
 flake8-docstrings = "^1.5.0"
 flake8-bandit = "^2.1.2"
-flake8-bugbear = "^20.1.4"
 flake8-black = "^0.2.0"
 safety = "^1.9.0"
 pylint = "^2.5.3"
@@ -41,6 +38,7 @@ flake8-builtins = "^1.5.3"
 flake8-comprehensions = "^3.2.3"
 flake8-mutable = "^1.2.0"
 pandas-vet = "^0.2.2"
+wemake-python-styleguide = "^0.14.0"
 
 [tool.pylint.format]
 max-line-length = "88"
@@ -55,15 +53,21 @@ exclude = ["build", "dist", "*.egg-info", ".git", "ignore", ".cache", ".mypy_cac
 [tool.flakehell.plugins]
 "flake8-*" = ["+*"]
 flake8-docstrings = ["-D100", "-D104", "-D401"]
+flake8-quotes = ["-*"]
+flake8-darglint = ["-*"]  # will enable once I finally get around to RESTifying docstrings
 mccabe = ["+*"]
 pep8-naming = ["+*"]
 pycodestyle = ["+*", "-E501", "-W503"]
 pyflakes = ["+*"]
 pylint = ["+*", "-C0330", "-C0326"]
+wemake-python-styleguide = ["+*", "-WPS432", "-WPS226", "-WPS305", "-WPS348"]
 
 [tool.flakehell.exceptions."tests/"]
 flake8-bandit = ["-S101"]
 pylint = ["-C0116"]
+
+[tool.flakehell.exceptions."clogstats/cli.py"]
+wemake-python-styleguide = ["-WPS421", "-WPS210", "-WPS213"]
 
 [tool.isort]
 exclude = ["build", "dist", "*.egg-info", ".git", "ignore", ".cache", ".mypy_cache"]

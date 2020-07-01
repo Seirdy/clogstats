@@ -18,7 +18,7 @@ def test_analyze_all_logs(date_range, log_path):
                     "Seirdy": 4,
                     "Caspy7": 2,
                     "micr0": 1,
-                }
+                },
             ),
             nicks=6,
             msgs=22,
@@ -36,7 +36,7 @@ def test_analyze_all_logs(date_range, log_path):
             msgs=2,
         ),
         IRCChannel(
-            name="freenode.#minetest", topwords=Counter({"Seirdy": 1}), nicks=1, msgs=1
+            name="freenode.#minetest", topwords=Counter({"Seirdy": 1}), nicks=1, msgs=1,
         ),
         IRCChannel(name="freenode.#go-nuts", topwords=Counter(), nicks=0, msgs=0),
     ]
