@@ -139,7 +139,7 @@ def analyze_multiple_logs(  # noqa: R0913
             logfile_df=parsed_logs[channel_name],
             date_range=date_range,
             name=channel_name,
-            nick_blacklist=nick_blacklists.get(channel_name.split(".#", 1)[0], set(),),
+            nick_blacklist=nick_blacklists.get(channel_name.split(".#", 1)[0], set()),
         )
         for channel_name in parsed_logs
     )
@@ -178,8 +178,24 @@ def log_paths(
 
 
 def parse_multiple_logs(paths: Iterable[Path]) -> ParsedLogs:
-    """Return a dict mapping a channel name to its parsed DataFrame."""
+    """Return a dict mapping each channel name to its parsed DataFrame."""
     return {path.name[4:-11]: read_all_lines(path) for path in paths}
+
+
+def parse_all_logs(
+    include_channels: Collection[str] = None,
+    exclude_channels: Collection[str] = None,
+    log_dir: str = None,
+) -> ParsedLogs:
+    """Parse every log on the system."""
+    # maybe parallelize this in the future.
+    return parse_multiple_logs(
+        log_paths(
+            exclude_channels=exclude_channels,
+            include_channels=include_channels,
+            log_dir=log_dir,
+        ),
+    )
 
 
 def analyze_all_logs(  # noqa: R0913
@@ -197,7 +213,7 @@ def analyze_all_logs(  # noqa: R0913
             exclude_channels=exclude_channels,
             include_channels=include_channels,
             log_dir=log_dir,
-        )
+        ),
     )
     # set the arguments for each run of analyze_log_wrapper
     # for all the channels we want to analyze
