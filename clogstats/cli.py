@@ -101,6 +101,8 @@ def parse_args() -> argparse.Namespace:
 # a row in the output table containing five columns
 Row = Tuple[str, str, str, str, str]
 
+PerChannelValues = Dict[str, Set[str]]
+
 
 def result_table(parsed_args: argparse.Namespace) -> List[Row]:
     """Run clogstats_forecasting from the CLI and dump the results."""
@@ -111,7 +113,7 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
     )
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
-    nick_blacklists: Optional[Dict[str, Set[str]]] = None
+    nick_blacklists: Optional[PerChannelValues] = None
     if parsed_args.disable_bot_filters:
         nick_blacklists = {}
 
@@ -127,8 +129,7 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
     )
 
     # display total message count
-    msgs_allchans = sum(channel.msgs for channel in collected_stats)
-    print(f"total messages: {msgs_allchans}")
+    print(f"total messages: {sum(channel.msgs for channel in collected_stats)}")
 
     # make a table to display per-channel stats
     # filter channels
@@ -138,8 +139,7 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
         if channel.msgs >= parsed_args.min_activity
         and channel.nicks >= parsed_args.min_nicks
     ]
-    column_headings: Row = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
-    table_rows: List[Row] = [
+    return [("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")] + [
         (
             # channel ranking when sorting channels by # of messages (descending)
             f"{ranking}.",
@@ -159,13 +159,12 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
         for ranking, channel in enumerate(collected_stats, start=1)
         if parsed_args.num is None or ranking <= parsed_args.num
     ]
-    return [column_headings] + table_rows
 
 
 def padding_sizes(table: List[Row]) -> Iterator[int]:
     """Calculate padding to add to each cell in a table for alignment."""
     for col_number, col in enumerate(zip(*table)):
-        if (col_number + 1) % 5 != 0:  # don't add padding to last column
+        if (col_number + 1) % 5:  # don't add padding to last column
             yield max(map(len, col))
         else:
             yield 0
