@@ -25,7 +25,7 @@ def data_to_dataframe(
     )
     dataframe_stats = dataframe_stats.assign(date_start=date_range.start_time)
     dataframe_stats = dataframe_stats.assign(date_end=date_range.end_time)
-    dataframe_stats.set_index("date_start")
+    dataframe_stats.set_index("date_end")
     return dataframe_stats
 
 
