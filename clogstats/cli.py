@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime, timedelta
 from typing import Dict, Iterator, List, Optional, Set, Tuple
 
-from clogstats.gather_stats import DateRange, analyze_all_logs
+from clogstats.stats.gather_stats import DateRange, analyze_all_logs
 
 
 def parse_args() -> argparse.Namespace:

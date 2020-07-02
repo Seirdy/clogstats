@@ -19,7 +19,7 @@ from typing import (
 
 import pandas as pd  # type: ignore
 
-from clogstats.parse import DateRange, read_all_lines
+from clogstats.stats.parse import DateRange, read_all_lines
 
 
 NickBlacklist = Mapping[str, Set[str]]

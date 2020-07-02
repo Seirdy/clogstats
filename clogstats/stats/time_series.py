@@ -6,14 +6,14 @@ from typing import Collection, Iterator, List, Mapping, Optional, Set
 import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
 
-from clogstats.gather_stats import (
+from clogstats.stats.gather_stats import (
     IRCChannel,
     NickBlacklist,
     ParsedLogs,
     analyze_multiple_logs,
     parse_all_logs,
 )
-from clogstats.parse import DateRange
+from clogstats.stats.parse import DateRange
 
 
 def data_to_dataframe(
