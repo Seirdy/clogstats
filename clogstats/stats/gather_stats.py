@@ -180,7 +180,15 @@ def log_paths(
 
 def parse_multiple_logs(paths: Iterable[Path]) -> ParsedLogs:
     """Return a dict mapping each channel name to its parsed DataFrame."""
-    return {path.name[4:-11]: read_all_lines(path) for path in paths}
+    paths = list(paths)  # collect paths into a list so we can iterate multiple times
+    with Pool() as pool:
+        log_contents: Iterable[pd.DataFrame] = pool.imap(read_all_lines, paths, 4)
+        # explicitly call close() and join() for coverage.py to work
+        # otherwise redundant due to `with` statement
+        pool.close()
+        pool.join()
+    log_names = (path.name[4:-11] for path in paths)
+    return dict(zip(log_names, log_contents))
 
 
 def parse_all_logs(
