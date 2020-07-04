@@ -1,7 +1,7 @@
 """Gather and plot stats across discrete time intervals."""
 
 from dataclasses import asdict, dataclass
-from typing import Iterator, List, Mapping, Optional, Set
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Set
 
 import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
@@ -17,15 +17,23 @@ from clogstats.stats.gather_stats import (
 from clogstats.stats.parse import DateRange
 
 
+def ircchannel_to_dict(ircchannel: IRCChannel) -> Dict[str, Any]:
+    """Convert an IRCChannel to a dict.
+
+    IRCChannel.topwords is usually a Counter, which gets mangled by
+    dataclasses.asdict(). This function prevents that from happening
+    """
+    ircchannel_dict = asdict(ircchannel)
+    ircchannel_dict["topwords"] = ircchannel.topwords
+    return ircchannel_dict
+
+
 def data_to_dataframe(
     gathered_stats: List[IRCChannel], date_range: DateRange,
 ) -> pd.DataFrame:
     """Convert the list of IRCChannels into a single DataFrame."""
     dataframe_stats: pd.DataFrame = pd.DataFrame(
-        # fix this line: asdict() turns my beautiful topwords dict
-        # into a key-value pair where the key is a tuple of the ORIGINAL key-value, and
-        # the val is 1.
-        [asdict(channel) for channel in gathered_stats],
+        [ircchannel_to_dict(channel) for channel in gathered_stats],
     )
     dataframe_stats = dataframe_stats.assign(
         date_start=date_range.start_time, date_end=date_range.end_time,
