@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest  # type: ignore
 
-from clogstats.parse import DateRange
+from clogstats.stats.parse import DateRange
 
 
 @pytest.fixture()

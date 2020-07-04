@@ -1,7 +1,7 @@
 """Tests for the accuracy of the stats read from IRC logs."""
 from collections import Counter
 
-from clogstats.gather_stats import IRCChannel, analyze_all_logs
+from clogstats.stats.gather_stats import IRCChannel, analyze_all_logs
 
 
 def test_analyze_all_logs(date_range, log_path):
