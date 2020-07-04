@@ -1,12 +1,13 @@
 """Gather and plot stats across discrete time intervals."""
 
 from dataclasses import asdict, dataclass
-from typing import Collection, Iterator, List, Mapping, Optional, Set
+from typing import Iterator, List, Mapping, Optional, Set
 
 import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
 
 from clogstats.stats.gather_stats import (
+    ChannelsWanted,
     IRCChannel,
     NickBlacklist,
     ParsedLogs,
@@ -21,12 +22,15 @@ def data_to_dataframe(
 ) -> pd.DataFrame:
     """Convert the list of IRCChannels into a single DataFrame."""
     dataframe_stats: pd.DataFrame = pd.DataFrame(
+        # fix this line: asdict() turns my beautiful topwords dict
+        # into a key-value pair where the key is a tuple of the ORIGINAL key-value, and
+        # the val is 1.
         [asdict(channel) for channel in gathered_stats],
     )
-    dataframe_stats = dataframe_stats.assign(date_start=date_range.start_time)
-    dataframe_stats = dataframe_stats.assign(date_end=date_range.end_time)
-    dataframe_stats.set_index("date_end")
-    return dataframe_stats
+    dataframe_stats = dataframe_stats.assign(
+        date_start=date_range.start_time, date_end=date_range.end_time,
+    )
+    return dataframe_stats.set_index("date_end")
 
 
 @dataclass
@@ -78,19 +82,14 @@ def aggregate_timeseries_data(
 
 def aggregate_all_timeseries_data(  # noqa: R0913, WPS211 # this is a wrapper function
     date_range: DateRange,
-    exclude_channels: Collection[str] = None,
-    include_channels: Collection[str] = None,
+    channels_wanted: ChannelsWanted = None,
     log_dir: str = None,
     nick_blacklists: Mapping[str, Set[str]] = None,
     sortkey: str = "msgs",
     intervals: int = 0,
 ) -> pd.DataFrame:
     """Wrap functions to parse logfiles and generate timeseries data from them."""
-    parsed_logs = parse_all_logs(
-        include_channels=include_channels,
-        exclude_channels=exclude_channels,
-        log_dir=log_dir,
-    )
+    parsed_logs = parse_all_logs(channels_wanted=channels_wanted, log_dir=log_dir)
     analyze_multiple_logs_args = AnalyzeMultipleLogsArgs(
         parsed_logs=parsed_logs, sortkey=sortkey, nick_blacklists=nick_blacklists,
     )

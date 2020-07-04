@@ -58,35 +58,29 @@ flake8-quotes = ["-*"]
 flake8-darglint = ["-*"]  # will enable once I finally get around to RESTifying docstrings
 mccabe = ["+*"]
 pep8-naming = ["+*"]
-pycodestyle = ["+*", "-E501", "-W503"]
+pycodestyle = ["+*", "-E203", "-E501", "-W503"]  # black compliance
 pyflakes = ["+*"]
 pylint = ["+*", "-C0330", "-C0326"]
 wemake-python-styleguide = [
 	"+*",
-	"-WPS432",
-	"-WPS226",
-	"-WPS305",
-	"-WPS348",
-	"-WPS306",
+	"-WPS226",  # string constant overuse: necessary for grabbing pandas columns
+	"-WPS305",  # I like my f-strings
+	"-WPS348",  # lines starting with a dot: inconsistent with black + pandas
+	"-WPS306",  # pylint says we should prefer implicit inheritance from "object".
 	"-WPS435",  # list multiplication is okay with numpy
 ]
+
+[tool.flakehell.exceptions."clogstats/cli.py"]
+wemake-python-styleguide = ["-WPS421"]  # the cli entrypoint should print
 
 [tool.flakehell.exceptions."tests/"]
 flake8-bandit = ["-S101"]
 pylint = ["-C0116"]
+wemake-python-styleguide = ["-WPS432"]  # magic numbers are okay in tests
 
-[tool.flakehell.exceptions."clogstats/cli.py"]
-wemake-python-styleguide = ["-WPS421", "-WPS210", "-WPS213"]
-
-# I'll remove these one-by-one later
-[tool.flakehell.exceptions."clogstats/gather_stats.py"]
-wemake-python-styleguide = [
-	"-WPS202",
-	"-WPS210",
-	"-WPS211",
-	"-WPS337",
-	"-WPS609",
-]
+[tool.flakehell.exceptions."clogstats/stats/gather_stats.py"]
+# will fix by splitting off logfile discovery/path-handling into own file
+wemake-python-styleguide = ["-WPS202", "-WPS235"]
 
 [tool.isort]
 exclude = ["build", "dist", "*.egg-info", ".git", "ignore", ".cache", ".mypy_cache"]

@@ -1,6 +1,4 @@
 """Parse and aggregate statistics from all desired WeeChat logs."""
-import re
-
 from dataclasses import dataclass
 from multiprocessing import Pool
 from os import environ
@@ -14,6 +12,7 @@ from typing import (
     List,
     Mapping,
     NamedTuple,
+    Optional,
     Set,
 )
 
@@ -38,10 +37,15 @@ BOT_BLACKLISTS: NickBlacklist = MappingProxyType(
     },
 )
 
-# example logfile: "irc.freenode.#python.weechatlog"
-LOGFILE_REGEX: re.Pattern = re.compile(
-    r"(?:^irc\.)(?P<network>.*)(?:\.#.*\.weechatlog$)",
-)
+
+class ChannelsWanted(NamedTuple):
+    """Contains lists of channels to include/exclude.
+
+    These are always passed to functions together, so it makes sense to group them.
+    """
+
+    include_channels: Optional[Collection[str]] = None
+    exclude_channels: Optional[Collection[str]] = None
 
 
 @dataclass
@@ -92,8 +96,9 @@ def analyze_log(
     topwords: Counter[str] = Counter(nick_counts.to_dict())
 
     # total messages
-    msgs = nick_counts.sum()
-    return IRCChannel(name=name, topwords=topwords, nicks=len(topwords), msgs=msgs)
+    return IRCChannel(
+        name=name, topwords=topwords, nicks=len(topwords), msgs=nick_counts.sum(),
+    )
 
 
 class AnalyzeLogArgs(NamedTuple):
@@ -147,7 +152,7 @@ def analyze_multiple_logs(  # noqa: R0913
     with Pool() as pool:
         output_data = sorted(
             pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
-            key=lambda channel: channel.__getattribute__(sortkey),
+            key=lambda channel: getattr(channel, sortkey),
             reverse=True,
         )
         # explicitly call close() and join() for coverage.py to work
@@ -157,10 +162,32 @@ def analyze_multiple_logs(  # noqa: R0913
         return output_data
 
 
+def channel_name(path: Path) -> str:
+    """Extract the channel name from its logfile's path."""
+    # strip the "irc." prefix and ".weechatlog" suffix
+    # in py39 strings will get the removeprefix() and removesuffix() methods.
+    # will probably make clogstats py39+ in like 2022 or something lol
+    return path.name[len("irc.") : -len(".weechatlog")]
+
+
+def path_is_wanted(path: Path, channels_wanted: ChannelsWanted = None) -> bool:
+    """Determine if the given path is to be analyzed or ignored."""
+    # Analyze all paths if no channels to include/exclude are specified
+    if channels_wanted is None:
+        return True
+    path_not_excluded = (
+        channels_wanted.exclude_channels is None
+        or channel_name(path) not in channels_wanted.exclude_channels
+    )
+    path_included = (
+        not channels_wanted.include_channels
+        or channel_name(path) in channels_wanted.include_channels
+    )
+    return path_not_excluded and path_included
+
+
 def log_paths(
-    exclude_channels: Collection[str] = None,
-    include_channels: Collection[str] = None,
-    log_dir: str = None,
+    channels_wanted: ChannelsWanted = None, log_dir: str = None,
 ) -> Iterator[Path]:
     """Get all the .weechatlog paths to analyze for the current user."""
     if log_dir:
@@ -172,9 +199,7 @@ def log_paths(
             weechat_home = Path.home() / ".weechat"
         log_path = weechat_home / "logs"
     for path in log_path.glob("irc.*.[#]*.weechatlog"):
-        if (exclude_channels is None or path.name[4:-11] not in exclude_channels) and (
-            not include_channels or path.name[4:-11] in include_channels
-        ):
+        if path_is_wanted(path, channels_wanted):
             yield path
 
 
@@ -187,43 +212,30 @@ def parse_multiple_logs(paths: Iterable[Path]) -> ParsedLogs:
         # otherwise redundant due to `with` statement
         pool.close()
         pool.join()
-    log_names = (path.name[4:-11] for path in paths)
+    log_names = (channel_name(path) for path in paths)
     return dict(zip(log_names, log_contents))
 
 
 def parse_all_logs(
-    include_channels: Collection[str] = None,
-    exclude_channels: Collection[str] = None,
-    log_dir: str = None,
+    channels_wanted: ChannelsWanted = None, log_dir: str = None,
 ) -> ParsedLogs:
     """Parse every log on the system."""
     # maybe parallelize this in the future.
     return parse_multiple_logs(
-        log_paths(
-            exclude_channels=exclude_channels,
-            include_channels=include_channels,
-            log_dir=log_dir,
-        ),
+        log_paths(channels_wanted=channels_wanted, log_dir=log_dir),
     )
 
 
 def analyze_all_logs(  # noqa: R0913
     date_range: DateRange,
-    include_channels: Collection[str] = None,
-    exclude_channels: Collection[str] = None,
-    nick_blacklists: Mapping[str, Set[str]] = None,
+    channels_wanted: ChannelsWanted = None,
+    nick_blacklists: NickBlacklist = None,
     sortkey: str = "msgs",
     log_dir: str = None,
 ) -> List[IRCChannel]:
     """Gather stats on all logs in parallel."""
     # set default values for optional arguments
-    parsed_logs = parse_multiple_logs(
-        log_paths(
-            exclude_channels=exclude_channels,
-            include_channels=include_channels,
-            log_dir=log_dir,
-        ),
-    )
+    parsed_logs = parse_all_logs(channels_wanted=channels_wanted, log_dir=log_dir)
     # set the arguments for each run of analyze_log_wrapper
     # for all the channels we want to analyze
     return analyze_multiple_logs(

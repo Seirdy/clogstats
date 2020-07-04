@@ -10,6 +10,6 @@ def hw_analyzed_log(gathered_stats: pd.DataFrame) -> ExponentialSmoothing:
 
     gathered_stats should just hold a single channel's data.
     """
-    gathered_stats.index.freq = 'MS'
-    model = ExponentialSmoothing(gathered_stats, seasonal="mul", seasonal_periods=7).fit()
-    return model
+    return ExponentialSmoothing(
+        gathered_stats["msgs"], seasonal="mul", seasonal_periods=7,
+    ).fit()

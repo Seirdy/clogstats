@@ -4,10 +4,15 @@ import argparse
 from datetime import datetime, timedelta
 from typing import Dict, Iterator, List, Optional, Set, Tuple
 
-from clogstats.stats.gather_stats import DateRange, analyze_all_logs
+from clogstats.stats.gather_stats import (
+    ChannelsWanted,
+    DateRange,
+    IRCChannel,
+    analyze_all_logs,
+)
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args() -> argparse.Namespace:  # noqa: WPS213 # lots of flags = lots of exprs
     """Parse CLI options."""
     parser = argparse.ArgumentParser(
         description="Gather statistics from WeeChat log files.",
@@ -104,13 +109,16 @@ Row = Tuple[str, str, str, str, str]
 PerChannelValues = Dict[str, Set[str]]
 
 
-def result_table(parsed_args: argparse.Namespace) -> List[Row]:
+def calculate_date_range(duration: timedelta) -> DateRange:
+    """Compute the date range of analysis from the given timedelta."""
+    end_time = datetime.now()
+    return DateRange(start_time=end_time - duration, end_time=end_time)
+
+
+def collect_stats(parsed_args: argparse.Namespace) -> List[IRCChannel]:
     """Run clogstats_forecasting from the CLI and dump the results."""
     # get user-supplied parameters
-    end_time = datetime.now()
-    date_range = DateRange(
-        start_time=end_time - timedelta(hours=parsed_args.duration), end_time=end_time,
-    )
+    date_range = calculate_date_range(timedelta(hours=parsed_args.duration))
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
     nick_blacklists: Optional[PerChannelValues] = None
@@ -121,8 +129,10 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
     # convert channels to include/exclude to sets for better lookup.
     collected_stats = analyze_all_logs(
         date_range=date_range,
-        include_channels=set(parsed_args.include_channels),
-        exclude_channels=set(parsed_args.exclude_channels),
+        channels_wanted=ChannelsWanted(
+            include_channels=set(parsed_args.include_channels),
+            exclude_channels=set(parsed_args.exclude_channels),
+        ),
         nick_blacklists=nick_blacklists,
         sortkey=parsed_args.sort_by,
         log_dir=parsed_args.log_dir,
@@ -133,12 +143,18 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
 
     # make a table to display per-channel stats
     # filter channels
-    collected_stats = [
+    return [
         channel
         for channel in collected_stats
         if channel.msgs >= parsed_args.min_activity
         and channel.nicks >= parsed_args.min_nicks
     ]
+
+
+def result_table(
+    max_entries: int, collected_stats: List[IRCChannel], max_topwords: int,
+) -> List[Row]:
+    """Assemble a table from gathered stats."""
     return [("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")] + [
         (
             # channel ranking when sorting channels by # of messages (descending)
@@ -150,14 +166,12 @@ def result_table(parsed_args: argparse.Namespace) -> List[Row]:
             ", ".join(
                 (
                     f"{nick}: {score}"
-                    for nick, score in channel.topwords.most_common(
-                        parsed_args.max_topwords,
-                    )
+                    for nick, score in channel.topwords.most_common(max_topwords)
                 ),
             ),
         )
         for ranking, channel in enumerate(collected_stats, start=1)
-        if parsed_args.num is None or ranking <= parsed_args.num
+        if max_entries is None or ranking <= max_entries
     ]
 
 
@@ -170,15 +184,23 @@ def padding_sizes(table: List[Row]) -> Iterator[int]:
             yield 0
 
 
-def main():
-    """Generate a table of results and print it with aligned columns.
+def pretty_print_table(table: List[Row]) -> None:
+    """Print a table of IRC stats with aligned columns.
 
     Alignment mimics the `column` utility from BSD and util-linux.
     """
-    full_table: List[Row] = result_table(parse_args())
-    for row in full_table:
-        row_cells = (
-            cell.ljust(width)
-            for cell, width in zip(row, list(padding_sizes(full_table)))
-        )
+    for row in table:
+        row_paddings = list(padding_sizes(table))
+        row_cells = (cell.ljust(width) for cell, width in zip(row, row_paddings))
         print(" ".join(row_cells))
+
+
+def main():
+    """Calculate and pretty-print a table of IRC stats acc. to CLI args."""
+    parsed_args = parse_args()
+    full_table: List[Row] = result_table(
+        max_entries=parsed_args.num,
+        collected_stats=collect_stats(parsed_args),
+        max_topwords=parsed_args.max_topwords,
+    )
+    pretty_print_table(full_table)
