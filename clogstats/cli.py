@@ -4,12 +4,8 @@ import argparse
 from datetime import datetime, timedelta
 from typing import Dict, Iterator, List, Optional, Set, Tuple
 
-from clogstats.stats.gather_stats import (
-    ChannelsWanted,
-    DateRange,
-    IRCChannel,
-    analyze_all_logs,
-)
+from clogstats.stats.gather_stats import ChannelsWanted, IRCChannel, analyze_all_logs
+from clogstats.stats.parse import DateRange
 
 
 def parse_args() -> argparse.Namespace:  # noqa: WPS213 # lots of flags = lots of exprs
@@ -152,7 +148,7 @@ def collect_stats(parsed_args: argparse.Namespace) -> List[IRCChannel]:
 
 
 def result_table(
-    max_entries: int, collected_stats: List[IRCChannel], max_topwords: int,
+    max_entries: Optional[int], collected_stats: List[IRCChannel], max_topwords: int,
 ) -> List[Row]:
     """Assemble a table from gathered stats."""
     return [("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")] + [
@@ -195,7 +191,7 @@ def pretty_print_table(table: List[Row]) -> None:
         print(" ".join(row_cells))
 
 
-def main():
+def main() -> None:
     """Calculate and pretty-print a table of IRC stats acc. to CLI args."""
     parsed_args = parse_args()
     full_table: List[Row] = result_table(

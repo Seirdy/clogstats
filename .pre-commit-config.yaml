@@ -16,6 +16,12 @@ repos:
         files: ^pyproject\.toml$
         pass_filenames: false
 
+      - id: pyupgrade
+        name: pyupgrade
+        entry: poetry run pyupgrade --py36-plus
+        language: system
+        types: [python]
+
       - id: isort
         name: isort
         entry: poetry run isort
@@ -37,6 +43,12 @@ repos:
       - id: mypy
         name: mypy
         entry: poetry run mypy .
+        args: [
+          --warn-no-return,
+          --warn-unreachable,
+          --strict,
+          --implicit-optional,
+        ]
         language: system
         types: [python]
         pass_filenames: false
