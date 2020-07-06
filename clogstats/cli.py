@@ -204,3 +204,7 @@ def main():
         max_topwords=parsed_args.max_topwords,
     )
     pretty_print_table(full_table)
+
+
+if __name__ == "__main__":
+    main()
