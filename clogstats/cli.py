@@ -4,8 +4,12 @@ import argparse
 from datetime import datetime, timedelta
 from typing import Dict, Iterator, List, Optional, Set, Tuple
 
-from clogstats.stats.gather_stats import ChannelsWanted, IRCChannel, analyze_all_logs
-from clogstats.stats.parse import DateRange
+from clogstats.stats.gather_stats import (
+    ChannelsWanted,
+    DateRange,
+    IRCChannel,
+    analyze_all_logs,
+)
 
 
 def parse_args() -> argparse.Namespace:  # noqa: WPS213 # lots of flags = lots of exprs

@@ -1,5 +1,6 @@
 """Parse and aggregate statistics from all desired WeeChat logs."""
 from dataclasses import dataclass
+from datetime import datetime
 from multiprocessing import Pool
 from os import environ
 from pathlib import Path
@@ -16,9 +17,10 @@ from typing import (
     Set,
 )
 
+import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
 
-from clogstats.stats.parse import DateRange, read_all_lines
+from clogstats.stats.parse import read_all_lines
 
 
 NickBlacklist = Mapping[str, Set[str]]
@@ -36,6 +38,15 @@ BOT_BLACKLISTS: NickBlacklist = MappingProxyType(
         "supernets": {"scroll", "cancer", "faggotxxx", "fuckyou"},
     },
 )
+
+
+class DateRange(NamedTuple):
+    """A time range used to select the part of a log file we want to analyze."""
+
+    # IRC didn't exist on 0001-01-01 CE [citation needed]
+    start_time: np.datetime64 = np.datetime64(datetime.min)
+    # if civilization is a thing at datetime.max, I hope nobody runs this.
+    end_time: np.datetime64 = np.datetime64(datetime.max)
 
 
 class ChannelsWanted(NamedTuple):
@@ -77,7 +88,7 @@ def analyze_log(
     # filter date range
     logfile_df = logfile_df[
         (logfile_df["timestamps"] > date_range.start_time)
-        & (logfile_df["timestamps"] < date_range.end_time)
+        & (logfile_df["timestamps"] < date_range.end_time)  # noqa: S101 # no comma here
     ]
     if not nick_blacklist:
         nick_blacklist = set()

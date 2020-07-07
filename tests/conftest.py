@@ -1,21 +1,17 @@
 """Set up common values for reading/working with the repo's sample logs."""
-from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import pytest  # type: ignore
 
-from clogstats.stats.parse import DateRange
+from clogstats.stats.gather_stats import DateRange
 
 
 @pytest.fixture()
 def date_range() -> DateRange:
     """Date range for sample logs."""
-    start_time = datetime.strptime(
-        "2020-06-19 12:46:00", "%Y-%m-%d %H:%M:%S",  # noqa: WPS323
-    )
-    end_time = datetime.strptime(
-        "2020-06-19 13:43:00", "%Y-%m-%d %H:%M:%S",  # noqa: WPS323
-    )
+    start_time = np.datetime64("2020-06-19T12:46:00")
+    end_time = np.datetime64("2020-06-19T13:43:00")
     return DateRange(start_time=start_time, end_time=end_time)
 
 

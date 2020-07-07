@@ -1,10 +1,8 @@
 """Components for reading WeeChat logs and gathering statistics from them."""
 
-from datetime import datetime
 from pathlib import Path
-from typing import NamedTuple, Optional
+from typing import Optional
 
-import numpy as np  # type: ignore
 import pandas as pd  # type: ignore  # mypy doesn't have type stubs for pandas yet.
 
 
@@ -40,15 +38,6 @@ def msg_type(prefix: str) -> str:
     except KeyError:
         # the prefix is a nick
         return "message"
-
-
-class DateRange(NamedTuple):
-    """A time range used to select the part of a log file we want to analyze."""
-
-    # IRC didn't exist on 0001-01-01 CE [citation needed]
-    start_time: np.datetime64 = np.datetime64(datetime.min)
-    # if civilization is a thing at datetime.max, I hope nobody runs this.
-    end_time: np.datetime64 = np.datetime64(datetime.max)
 
 
 def read_all_lines(path: Path) -> pd.DataFrame:

@@ -8,13 +8,13 @@ import pandas as pd  # type: ignore
 
 from clogstats.stats.gather_stats import (
     ChannelsWanted,
+    DateRange,
     IRCChannel,
     NickBlacklist,
     ParsedLogs,
     analyze_multiple_logs,
     parse_all_logs,
 )
-from clogstats.stats.parse import DateRange
 
 
 def ircchannel_to_dict(ircchannel: IRCChannel) -> Dict[str, Any]:
