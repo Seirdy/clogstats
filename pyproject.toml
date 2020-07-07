@@ -98,7 +98,6 @@ use_parentheses = true
 
 known_first_party = "clogstats"
 known_third_party = [
-	"matplotlib",
 	"numpy",
 	"statsmodels",
 	"pandas",
