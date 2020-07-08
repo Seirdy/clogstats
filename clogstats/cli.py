@@ -2,12 +2,13 @@
 import argparse
 
 from datetime import datetime, timedelta
-from typing import Dict, Iterator, List, Optional, Set, Tuple
+from typing import Iterator, List, Optional, Tuple
 
 from clogstats.stats.gather_stats import (
     ChannelsWanted,
     DateRange,
     IRCChannel,
+    NickBlacklist,
     analyze_all_logs,
 )
 
@@ -106,8 +107,6 @@ def parse_args() -> argparse.Namespace:  # noqa: WPS213 # lots of flags = lots o
 # a row in the output table containing five columns
 Row = Tuple[str, str, str, str, str]
 
-PerChannelValues = Dict[str, Set[str]]
-
 
 def calculate_date_range(duration: timedelta) -> DateRange:
     """Compute the date range of analysis from the given timedelta."""
@@ -121,7 +120,7 @@ def collect_stats(parsed_args: argparse.Namespace) -> List[IRCChannel]:
     date_range = calculate_date_range(timedelta(hours=parsed_args.duration))
     print(f"Analyzing logs from {date_range.start_time} till {date_range.end_time}")
 
-    nick_blacklists: Optional[PerChannelValues] = None
+    nick_blacklists: Optional[NickBlacklist] = None
     if parsed_args.disable_bot_filters:
         nick_blacklists = {}
 
