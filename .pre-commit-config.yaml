@@ -6,7 +6,7 @@ repos:
       - id: check-yaml
       - id: check-merge-conflict
       - id: end-of-file-fixer
-      - id: trailing-whitespace
+      # - id: trailing-whitespace
   - repo: local
     hooks:
       - id: poetry-check
