@@ -160,17 +160,11 @@ def analyze_multiple_logs(  # noqa: R0913
         )
         for channel_name in parsed_logs
     )
-    with Pool() as pool:
-        output_data = sorted(
-            pool.imap_unordered(analyze_log_wrapper, analyze_log_args, 4),
-            key=lambda channel: getattr(channel, sortkey),
-            reverse=True,
-        )
-        # explicitly call close() and join() for coverage.py to work
-        # otherwise redundant due to `with` statement
-        pool.close()
-        pool.join()
-        return output_data
+    return sorted(
+        map(analyze_log_wrapper, analyze_log_args),
+        key=lambda channel: getattr(channel, sortkey),
+        reverse=True,
+    )
 
 
 def channel_name(path: Path) -> str:
