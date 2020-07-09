@@ -1,15 +1,27 @@
 """Run Holt-Winters triple-exponential smoothing over activity stats."""
 
-import pandas as pd  # type: ignore
+import pandas as pd
 
-from statsmodels.tsa.holtwinters import ExponentialSmoothing  # type: ignore
+from darts import TimeSeries
+from darts.models.exponential_smoothing import ExponentialSmoothing
 
 
-def hw_analyzed_log(gathered_stats: pd.DataFrame) -> ExponentialSmoothing:
-    """Create an ExponentialSmoothing object from IRC log stats.
+def hw_analyzed_log(
+    gathered_stats: TimeSeries,
+    seasonal_periods: int = 0,
+    seasonal_length: pd.Timedelta = None,
+    component_index: int = None,
+) -> ExponentialSmoothing:
+    """Create a pre-fitted ExponentialSmoothing object from IRC log stats.
 
-    gathered_stats should just hold a single channel's data.
+    gathered_stats should just hold a single channel's time-series data.
     """
-    return ExponentialSmoothing(
-        gathered_stats["msgs"], seasonal="mul", seasonal_periods=7,
-    ).fit()
+    if not (seasonal_periods or seasonal_length):
+        raise ValueError("Must provide valid seasonal_periods or seasonal_length")
+    if seasonal_length:
+        seasonal_periods = max(
+            seasonal_periods, int(gathered_stats.duration() / seasonal_length),
+        )
+    model = ExponentialSmoothing(seasonal="mul", seasonal_periods=seasonal_periods)
+    model.fit(gathered_stats, component_index=component_index)
+    return model

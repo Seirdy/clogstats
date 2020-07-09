@@ -19,13 +19,19 @@ handling.
 Dependencies
 ------------
 
-Clogstats supports CPython 3.6.1+ and PyPy3 7.3+. It uses
-[Poetry](https://python-poetry.org/) for dependency management.
+Clogstats requires at least Python 3.6.1.
 
-Python 3.7+: Pandas. Pandas depends on NumPy and Cython.
+Without any extras, it supports both CPython and PyPy 7.3.1+.
 
-Python 3.6: Pandas and [a backport](https://pypi.org/project/dataclasses/) of Python
-3.7's `dataclasses` library.
+On Python 3.7+, the only 3rd-party dependency is Pandas.
+
+Python 3.6 users also need [a backport](https://pypi.org/project/dataclasses/) of
+Python 3.7's `dataclasses` library.
+
+For advanced time-series manipulation and forecasting, clogstats can optionally use
+[darts](https://pypi.org/project/u8darts/). darts has [many large 3rd-party
+dependencies](https://github.com/unit8co/darts/blob/0.2.0/requirements/main.txt) of
+its own, most of which do not support PyPy.
 
 Installation
 ------------
@@ -34,6 +40,13 @@ Install with `pip`:
 
 ``` sh
 python3 -m pip install --user git+https://git.sr.ht/~seirdy/clogstats
+```
+
+Install clogstats with support for advanced time-series forecasting (no PyPy
+support):
+
+``` sh
+python3 -m pip install --user git+https://git.sr.ht/~seirdy/clogstats#egg=clogstats[forecasting]
 ```
 
 I recommend trying out [pipx](https://pipxproject.github.io/pipx/) to auto-create

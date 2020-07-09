@@ -1,4 +1,11 @@
-"""Gather and plot stats across discrete time intervals."""
+"""Gather stats across discrete time intervals.
+
+Collecting stats across discrete many small time intervals allows for
+the creation of simple time-series data.
+
+For more advanced time-series manipulation and analysis, see
+clogstats.forecasting.
+"""
 
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, Iterator, List, Mapping, Optional, Set
