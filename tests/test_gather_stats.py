@@ -4,7 +4,7 @@ from collections import Counter
 from clogstats.stats.gather_stats import ChannelsWanted, IRCChannel, analyze_all_logs
 
 
-def test_analyze_all_logs(date_range, log_path):
+def test_analyze_all_logs(small_date_range, log_path):
     log_dir = str(log_path)
     channels_wanted = ChannelsWanted(
         include_channels=[
@@ -16,7 +16,7 @@ def test_analyze_all_logs(date_range, log_path):
         ],
     )
     actual = analyze_all_logs(
-        channels_wanted=channels_wanted, date_range=date_range, log_dir=log_dir,
+        channels_wanted=channels_wanted, date_range=small_date_range, log_dir=log_dir,
     )
     expected = [
         IRCChannel(
