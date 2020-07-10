@@ -60,7 +60,7 @@ class AnalyzeMultipleLogsArgs:
 def divide_date_range(date_range: DateRange, intervals: int) -> List[DateRange]:
     """Divide date_range into a number of equal intervals."""
     delta = (date_range.end_time - date_range.start_time) / intervals
-    deltas = range(0, intervals) * np.array([delta] * intervals)
+    deltas = np.arange(intervals) * np.array([delta] * intervals)
     dates = date_range.start_time + deltas
     date_pairs = np.column_stack((dates[:-1], dates[1:]))
     return [DateRange(*interval) for interval in date_pairs]
