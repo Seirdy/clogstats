@@ -154,7 +154,8 @@ def result_table(
     max_entries: Optional[int], collected_stats: List[IRCChannel], max_topwords: int,
 ) -> List[Row]:
     """Assemble a table from gathered stats."""
-    return [("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")] + [
+    heading: Row = ("RANK", "CHANNEL", "MSGS", "NICKS", "TOPWORDS")
+    return [heading] + [
         (
             # channel ranking when sorting channels by # of messages (descending)
             f"{ranking}.",
