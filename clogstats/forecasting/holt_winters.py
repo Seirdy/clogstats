@@ -1,4 +1,4 @@
-"""Run Holt-Winters triple-exponential smoothing over activity stats."""
+"""Run triple-exponential smoothing forecasts, pre-fitted over activity stats."""
 
 import pandas as pd
 
@@ -16,8 +16,6 @@ def hw_analyzed_log(
 
     gathered_stats should just hold a single channel's time-series data.
     """
-    if not (seasonal_periods or seasonal_length):
-        raise ValueError("Must provide valid seasonal_periods or seasonal_length")
     if seasonal_length:
         seasonal_periods = max(
             seasonal_periods, int(gathered_stats.duration() / seasonal_length),
