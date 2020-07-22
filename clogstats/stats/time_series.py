@@ -10,8 +10,8 @@ clogstats.forecasting.
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, Iterator, List, Mapping, Optional, Set
 
-import numpy as np  # type: ignore
-import pandas as pd  # type: ignore
+import numpy as np
+import pandas as pd
 
 from clogstats.stats.gather_stats import (
     ChannelsWanted,

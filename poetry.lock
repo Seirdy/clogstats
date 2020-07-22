@@ -1752,7 +1752,7 @@ python-versions = "*"
 version = "1.4.1"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Backported and Experimental Type Hints for Python 3.5+"
 name = "typing-extensions"
 optional = false
@@ -1910,7 +1910,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 forecasting = ["u8darts"]
 
 [metadata]
-content-hash = "ffc9c5a4e4b3632c4bf1bd25a462aba4d3a1d72155e07e43211109c0b5f4449c"
+content-hash = "05949e160da88ced4c948d7eb2ffa64fe391dbac2475940e6f3bdccc308ca115"
 python-versions = "^3.6.1"
 
 [metadata.files]

@@ -7,6 +7,7 @@ import pandas as pd
 from darts import TimeSeries
 from darts.metrics import metrics
 from darts.models.forecasting_model import UnivariateForecastingModel  # for typing
+from typing_extensions import Protocol
 
 
 def create_timeseries(
@@ -46,7 +47,24 @@ def make_forecasts(
 
 
 Reduction = Callable[[np.ndarray], float]
-Metric = Callable[[TimeSeries, TimeSeries, bool, Reduction], float]
+
+
+class Metric(Protocol):  # noqa: R0903  # this is just a Callable with an optional type
+    """
+    Protocol for type-checking functions serving as error metrics.
+
+    Error metrics are typically provided by darts.metrics; see
+    its documentation for more information.
+    """
+
+    def __call__(
+        self,
+        series1: TimeSeries,
+        series2: TimeSeries,
+        intersect: bool = True,
+        reduction: Reduction = np.mean,
+    ) -> float:
+        ...  # noqa: WPS428
 
 
 def compare_predictions(

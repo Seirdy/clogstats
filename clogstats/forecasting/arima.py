@@ -1,7 +1,7 @@
 """Run ARIMA and ARIMA-related forecasts pre-fitted over activity stats."""
 
 from dataclasses import asdict, dataclass
-from typing import Optional
+from typing import Any, Mapping, Optional
 
 import pandas as pd
 from darts import TimeSeries
@@ -44,14 +44,14 @@ _ONE_DAY = pd.Timedelta("1D")
 # Disabled linting for argcount because this function needs to pass a
 # large number of arguments to auto-ARIMA. I simplified what I could.
 def auto_arima_analyzed_log(  # noqa: WPS211  # Found too many arguments
-    *autoarima_args,
+    *autoarima_args: Any,
     gathered_stats: TimeSeries,
     start_arima_params: ArimaParams = None,
     max_arima_params: ArimaParams = None,
     component_index: int = None,
     seasonal: bool = False,
     seasonal_length: pd.Timedelta = _ONE_DAY,
-    **autoarima_kwargs,
+    **autoarima_kwargs: Mapping[str, Any],
 ) -> AutoARIMA:
     """ARIMA forecast with atuo-optimized params.
 

@@ -1,8 +1,4 @@
 ---
-exclude: |
-  ^tests/sample_logs/.*\.weechatlog$|
-  ^ignore/.*|
-  (LICENSE.*|COPYING.*)
 default_language_version:
   python: python3
 repos:
@@ -30,16 +26,15 @@ repos:
 
       - id: autoflake
         name: autoflake
-        entry: autoflake .
+        entry: autoflake
         args: [
-          -r,
+          --recursive,
           --in-place,
           --remove-unused-variables,
           --remove-all-unused-imports,
         ]
         language: system
         types: [python]
-        pass_filenames: false
 
       - id: add-trailing-comma
         name: add-trailing-comma
@@ -47,7 +42,6 @@ repos:
         args: [--py36-plus]
         language: system
         types: [python]
-        pass_filenames: false
 
       - id: isort
         name: isort
@@ -69,16 +63,17 @@ repos:
 
       - id: mypy
         name: mypy
-        entry: poetry run mypy .
+        entry: poetry run mypy
         args: [
           --warn-no-return,
           --warn-unreachable,
           --strict,
           --implicit-optional,
+          --ignore-missing-imports,
         ]
         language: system
+        exclude: tests/
         types: [python]
-        pass_filenames: false
 
       - id: pytest
         name: pytest

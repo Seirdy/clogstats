@@ -17,8 +17,8 @@ from typing import (
     Set,
 )
 
-import numpy as np  # type: ignore
-import pandas as pd  # type: ignore
+import numpy as np
+import pandas as pd
 
 from clogstats.stats.parse import read_all_lines
 
