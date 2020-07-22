@@ -5,7 +5,6 @@ from typing import Optional
 
 import pandas as pd  # type: ignore  # mypy doesn't have type stubs for pandas yet.
 
-
 ANSI_ESCAPE = r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]"
 NICK_PREFIXES = frozenset(("+", "%", "@", "~", "&"))
 

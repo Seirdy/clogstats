@@ -22,7 +22,6 @@ import pandas as pd  # type: ignore
 
 from clogstats.stats.parse import read_all_lines
 
-
 NickBlacklist = Mapping[str, Set[str]]
 BOT_BLACKLISTS: NickBlacklist = MappingProxyType(
     {
@@ -138,7 +137,7 @@ def analyze_log_wrapper(args: AnalyzeLogArgs) -> IRCChannel:
 ParsedLogs = Mapping[str, pd.DataFrame]
 
 
-def analyze_multiple_logs(  # noqa: R0913
+def analyze_multiple_logs(
     date_range: DateRange,
     parsed_logs: ParsedLogs,
     nick_blacklists: Mapping[str, Set[str]] = None,
@@ -231,7 +230,7 @@ def parse_all_logs(
     )
 
 
-def analyze_all_logs(  # noqa: R0913
+def analyze_all_logs(
     date_range: DateRange,
     channels_wanted: ChannelsWanted = None,
     nick_blacklists: NickBlacklist = None,

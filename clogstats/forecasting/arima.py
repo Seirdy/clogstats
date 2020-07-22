@@ -4,10 +4,8 @@ from dataclasses import asdict, dataclass
 from typing import Optional
 
 import pandas as pd
-
 from darts import TimeSeries
 from darts.models.arima import ARIMA, AutoARIMA
-
 
 # first determine if the time series is stationary
 

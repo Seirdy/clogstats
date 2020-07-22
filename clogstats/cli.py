@@ -1,6 +1,5 @@
 """The command-line interface for clogstats_forecasting."""
 import argparse
-
 from datetime import datetime, timedelta
 from typing import Iterator, List, Optional, Tuple
 

@@ -1,7 +1,6 @@
 """Run triple-exponential smoothing forecasts, pre-fitted over activity stats."""
 
 import pandas as pd
-
 from darts import TimeSeries
 from darts.models.exponential_smoothing import ExponentialSmoothing
 
