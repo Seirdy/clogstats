@@ -4,7 +4,6 @@ from typing import Any, Callable, Dict, List, Mapping, NamedTuple
 
 import numpy as np
 import pandas as pd
-
 from darts import TimeSeries
 from darts.metrics import metrics
 from darts.models.forecasting_model import UnivariateForecastingModel  # for typing
@@ -40,7 +39,7 @@ def make_forecasts(
 ) -> Dict[str, TimeSeries]:
     """Run all the implemented predictions on a time series."""
     models: Dict[str, UnivariateForecastingModel] = {
-        name: model.prediction_function(train, **model.prediction_kwargs)
+        name: model.prediction_function(gathered_stats=train, **model.prediction_kwargs)
         for (name, model) in predictions_to_make.items()
     }
     return {name: model.predict(n_pred) for name, model in models.items()}
@@ -80,7 +79,9 @@ def make_and_compare_predictions(
     train, actual = gathered_stats.split_after(
         gathered_stats.end_time() - prediction_duration,
     )
-    forecasts = make_forecasts(train, len(actual), predictions_to_make)
+    forecasts = make_forecasts(
+        train=train, n_pred=len(actual), predictions_to_make=predictions_to_make,
+    )
     return PredictionEvaluations(
         predictions=forecasts,
         evaluations=compare_predictions(actual, forecasts, metric),
