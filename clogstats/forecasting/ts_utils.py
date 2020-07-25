@@ -7,6 +7,8 @@ import pandas as pd
 from darts import TimeSeries
 from darts.metrics import metrics
 from darts.models.forecasting_model import UnivariateForecastingModel  # for typing
+from darts.preprocessing.scaler_wrapper import ScalerWrapper
+from sklearn.preprocessing import PowerTransformer
 from typing_extensions import Protocol
 
 
@@ -44,6 +46,25 @@ def make_forecasts(
         for (name, model) in predictions_to_make.items()
     }
     return {name: model.predict(n_pred) for name, model in models.items()}
+
+
+def make_forecasts_ensure_positive(
+    train: TimeSeries, n_pred: int, predictions_to_make: ModelsToMake,
+) -> Dict[str, TimeSeries]:
+    """Wrap transfomations around make_transform() to ensure positive forecasts.
+
+    Avoids negative values in forecasts by adding 1 to all values
+    (ensuring no zeros) and applying a Box-Cox transformation/inversion
+    before/after forecasting.
+    """
+    scaler_wrapper = ScalerWrapper(scaler=PowerTransformer(method="box-cox"))
+    scaled_train = scaler_wrapper.fit_transform(train + 1)
+    forecasts = make_forecasts(scaled_train, n_pred, predictions_to_make)
+    # invert the transformation
+    return {
+        name: scaler_wrapper.inverse_transform(forecast) - 1
+        for (name, forecast) in forecasts.items()
+    }
 
 
 Reduction = Callable[[np.ndarray], float]
@@ -92,14 +113,20 @@ def make_and_compare_predictions(
     predictions_to_make: ModelsToMake,
     prediction_duration: pd.Timedelta = _ONE_DAY,
     metric: Metric = metrics.mse,
+    transform: bool = False,
 ) -> PredictionEvaluations:
     """Run multiple forecasts and compare their accuracy."""
     train, actual = gathered_stats.split_after(
         gathered_stats.end_time() - prediction_duration,
     )
-    forecasts = make_forecasts(
-        train=train, n_pred=len(actual), predictions_to_make=predictions_to_make,
-    )
+    if transform:
+        forecasts = make_forecasts_ensure_positive(
+            train=train, n_pred=len(actual), predictions_to_make=predictions_to_make,
+        )
+    else:
+        forecasts = make_forecasts(
+            train=train, n_pred=len(actual), predictions_to_make=predictions_to_make,
+        )
     return PredictionEvaluations(
         predictions=forecasts,
         evaluations=compare_predictions(actual, forecasts, metric),

@@ -25,12 +25,13 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6.1"
 pandas = ">=0.25.3, <2.0.0"
-dataclasses = {version = "^0.7", python = ">=3.6.1, <3.7"} # backport for python 3.6
+dataclasses = {version = "^0.7", python = "<3.7"} # backport for python 3.6
 u8darts = {version = "^0.2.2", optional = true}
 typing_extensions = "^3.7.4"
+scikit-learn = {version = "^0.22", optional = true}
 
 [tool.poetry.extras]
-forecasting = ["u8darts"]
+forecasting = ["u8darts", "scikit-learn"]
 
 [tool.poetry.scripts]
 clogstats = "clogstats.cli:main"
@@ -106,6 +107,9 @@ flake8-bandit = ["-S101"]
 pylint = ["-C0116"]
 wemake-python-styleguide = ["-WPS432"]  # magic numbers are okay in tests
 
+[tool.flakehell.exceptions."clogstats/forecasting/ts_utils.py"]
+# will break this up later
+wemake-python-styleguide = ["-WPS202"]
 [tool.flakehell.exceptions."clogstats/stats/gather_stats.py"]
 # will fix by splitting off logfile discovery/path-handling into own file
 wemake-python-styleguide = ["-WPS202", "-WPS235"]
