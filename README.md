@@ -83,7 +83,18 @@ Clogstats can sort channels by their number of messages or number of non-lurkers
 (i.e., the number of nicks that actually sent a message). It can also display the top
 most active nicks for each channel.
 
-Full usage:
+### Time-series analysis and forecasting
+
+Time-series modelling and forecasting requires installation with the "forecasting"
+dependency. Forecasts are a work in progress; as of right now, they are still quite
+inaccurate.
+
+Charting channel activity in Matplotlib, comparing three different forecasts with the
+actual output:
+
+![Channel activity for \#linuxmasterrace](https://u.teknik.io/QMyrj.png)
+
+### Command-line stats aggregation
 
 ``` text
 usage: clogstats [-h] [-d DURATION] [-n NUM] [--min-activity MIN_ACTIVITY] [--min-nicks MIN_NICKS] [--max-topwords MAX_TOPWORDS] [-s {msgs,nicks}]
@@ -113,8 +124,7 @@ optional arguments:
                         disable filtering of some known bots
 ```
 
-Examples
---------
+#### Examples
 
 Print the 10 most active IRC channels from the past 24 hours that have at least 40
 chatters, along with the top 4 most active nicks per channel:
