@@ -188,8 +188,8 @@ def pretty_print_table(table: List[Row]) -> None:
 
     Alignment mimics the `column` utility from BSD and util-linux.
     """
+    row_paddings = list(padding_sizes(table))
     for row in table:
-        row_paddings = list(padding_sizes(table))
         row_cells = (cell.ljust(width) for cell, width in zip(row, row_paddings))
         print(" ".join(row_cells))
 
