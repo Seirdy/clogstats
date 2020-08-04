@@ -95,7 +95,7 @@ def aggregate_timeseries_data(
     )
 
 
-def aggregate_all_timeseries_data(  # noqa: R0913, WPS211 # this is a wrapper function
+def aggregate_all_timeseries_data(  # this is a wrapper function
     date_range: DateRange,
     channels_wanted: ChannelsWanted = None,
     log_dir: str = None,

@@ -9,7 +9,7 @@ from darts.timeseries import TimeSeries
 
 # disable linting of too many args; listing extra args allows
 # **exponential_smoothing_kwargs to be of one type: Optional[str]
-def hw_analyzed_log(  # noqa: WPS211
+def hw_analyzed_log(
     gathered_stats: TimeSeries,
     seasonal_periods: int = 0,
     seasonal_length: pd.Timedelta = None,

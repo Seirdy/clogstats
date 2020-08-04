@@ -46,7 +46,7 @@ _ONE_DAY = pd.Timedelta("1D")
 
 # Disabled linting for argcount because this function needs to pass a
 # large number of arguments to auto-ARIMA. I simplified what I could.
-def auto_arima_analyzed_log(  # noqa: WPS211, R0913  # Found too many arguments
+def auto_arima_analyzed_log(  # noqa: WPS211  # Found too many arguments
     gathered_stats: TimeSeries,
     start_arima_params: ArimaParams = None,
     max_arima_params: ArimaParams = None,

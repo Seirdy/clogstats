@@ -76,6 +76,7 @@ max-line-length = "88"
 format = "grouped"
 max_line_length = 88
 max_complexity = 6
+max_arguments = 6
 show_source = false
 exclude = ["build", "dist", "*.egg-info", ".git", "ignore", ".cache", ".mypy_cache"]
 
@@ -89,7 +90,10 @@ mccabe = ["+*"]
 pep8-naming = ["+*"]
 pycodestyle = ["+*", "-E203", "-E501", "-W503"]  # black compliance
 pyflakes = ["+*"]
-pylint = ["+*", "-C0330", "-C0326"]
+pylint = [
+	"+*", "-C0330", "-C0326", # black compliance
+	"-R0913", # max-args is handled by wemake-python-styleguide
+]
 wemake-python-styleguide = [
 	"+*",
 	"-WPS226",  # string constant overuse: necessary for grabbing pandas columns
