@@ -25,13 +25,14 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6.1"
 pandas = ">=0.25.3, <2.0.0"
-dataclasses = {version = "^0.7", python = "<3.7"} # backport for python 3.6
+dataclasses = {version = "^0.7", python = "~3.6"} # backport for python 3.6
 u8darts = {version = "^0.2.2", optional = true}
 typing_extensions = "^3.7.4"
 scikit-learn = {version = "^0.22", optional = true}
+pmdarima = {version = "^1.7", optional = true}
 
 [tool.poetry.extras]
-forecasting = ["u8darts", "scikit-learn"]
+forecasting = ["u8darts", "scikit-learn", "pmdarima"]
 
 [tool.poetry.scripts]
 clogstats = "clogstats.cli:main"
