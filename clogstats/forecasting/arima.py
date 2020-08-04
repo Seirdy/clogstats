@@ -4,8 +4,8 @@ from dataclasses import asdict, dataclass
 from typing import Any, Mapping, Optional
 
 import pandas as pd
-from darts import TimeSeries
 from darts.models.arima import ARIMA, AutoARIMA
+from darts.timeseries import TimeSeries
 
 # first determine if the time series is stationary
 
@@ -27,13 +27,16 @@ def arima_analyzed_log(
     component_index: int = None,
 ) -> ARIMA:
     """Create a pre-fitted Arima model from IRC log stats.
+
     gathered_stats should just hold a single channel's time-series data.
     """
     if arima_params is None:
-        arima_params = ArimaParams()
-    model = ARIMA(
-        arima_params.p, arima_params.d, arima_params.q,
-    )  # optimize these values?
+        model = ARIMA(6, 0, 0)
+    else:
+        # pick a default value for "d" if it's None.
+        if arima_params.d is None:
+            arima_params.d = 0  # noqa: WPS111 # single-letter name
+        model = ARIMA(arima_params.p, arima_params.d, arima_params.q)
     model.fit(gathered_stats, component_index=component_index)
     return model
 
@@ -43,8 +46,7 @@ _ONE_DAY = pd.Timedelta("1D")
 
 # Disabled linting for argcount because this function needs to pass a
 # large number of arguments to auto-ARIMA. I simplified what I could.
-def auto_arima_analyzed_log(  # noqa: WPS211  # Found too many arguments
-    *autoarima_args: Any,
+def auto_arima_analyzed_log(  # noqa: WPS211, R0913  # Found too many arguments
     gathered_stats: TimeSeries,
     start_arima_params: ArimaParams = None,
     max_arima_params: ArimaParams = None,
@@ -66,7 +68,7 @@ def auto_arima_analyzed_log(  # noqa: WPS211  # Found too many arguments
                 setattr(max_arima_params, param_name, max(start_value * 2, 1))
             except TypeError:
                 setattr(max_arima_params, param_name, 1)
-    model = AutoARIMA(
+    model: AutoARIMA = AutoARIMA(  # type: ignore  # untyped function
         start_p=start_arima_params.p,
         d=start_arima_params.d,
         start_q=start_arima_params.q,
@@ -75,7 +77,6 @@ def auto_arima_analyzed_log(  # noqa: WPS211  # Found too many arguments
         max_q=max_arima_params.q,
         seasonal=seasonal,
         m=int(seasonal_length / gathered_stats.freq()),
-        *autoarima_args,
         **autoarima_kwargs,
     )
     model.fit(gathered_stats, component_index=component_index)

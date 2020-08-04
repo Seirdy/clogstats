@@ -1,18 +1,21 @@
 """Run triple-exponential smoothing forecasts, pre-fitted over activity stats."""
 
-from typing import Any, Mapping
+from typing import Optional
 
 import pandas as pd
-from darts import TimeSeries
 from darts.models.exponential_smoothing import ExponentialSmoothing
+from darts.timeseries import TimeSeries
 
 
-def hw_analyzed_log(
+# disable linting of too many args; listing extra args allows
+# **exponential_smoothing_kwargs to be of one type: Optional[str]
+def hw_analyzed_log(  # noqa: WPS211
     gathered_stats: TimeSeries,
     seasonal_periods: int = 0,
     seasonal_length: pd.Timedelta = None,
     component_index: int = 0,
-    **exponential_smoothing_kwargs: Mapping[str, Any],
+    damped: bool = False,
+    **exponential_smoothing_kwargs: Optional[str],
 ) -> ExponentialSmoothing:
     """Create a pre-fitted ExponentialSmoothing object from IRC log stats.
 
@@ -23,7 +26,10 @@ def hw_analyzed_log(
             seasonal_periods, int(gathered_stats.duration() / seasonal_length),
         )
     model = ExponentialSmoothing(
-        seasonal_periods=seasonal_periods, **exponential_smoothing_kwargs,
+        seasonal_periods=seasonal_periods,
+        optimized=True,
+        damped=damped,
+        **exponential_smoothing_kwargs,
     )
     model.fit(gathered_stats, component_index=component_index)
     return model
