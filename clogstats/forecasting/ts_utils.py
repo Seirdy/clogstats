@@ -4,10 +4,10 @@ from typing import Any, Callable, Dict, List, Mapping, NamedTuple
 
 import numpy as np
 import pandas as pd
-from darts import TimeSeries
 from darts.metrics import metrics
 from darts.models.forecasting_model import UnivariateForecastingModel  # for typing
 from darts.preprocessing.scaler_wrapper import ScalerWrapper
+from darts.timeseries import TimeSeries
 from sklearn.preprocessing import PowerTransformer
 from typing_extensions import Protocol
 
@@ -57,7 +57,10 @@ def make_forecasts_ensure_positive(
     (ensuring no zeros) and applying a Box-Cox transformation/inversion
     before/after forecasting.
     """
-    scaler_wrapper = ScalerWrapper(scaler=PowerTransformer(method="box-cox"))
+    scaler_wrapper = ScalerWrapper(  # type: ignore
+        scaler=PowerTransformer(method="box-cox"),
+    )
+    # box-cox doesn't like the number "0", so add one to everything
     scaled_train = scaler_wrapper.fit_transform(train + 1)
     forecasts = make_forecasts(scaled_train, n_pred, predictions_to_make)
     # invert the transformation
@@ -71,8 +74,7 @@ Reduction = Callable[[np.ndarray], float]
 
 
 class Metric(Protocol):  # noqa: R0903  # this is just a Callable with an optional type
-    """
-    Protocol for type-checking functions serving as error metrics.
+    """Protocol for type-checking functions serving as error metrics.
 
     Error metrics are typically provided by darts.metrics; see
     its documentation for more information.
@@ -111,21 +113,25 @@ _ONE_DAY: pd.Timedelta = pd.Timedelta("1D")
 def make_and_compare_predictions(
     gathered_stats: TimeSeries,
     predictions_to_make: ModelsToMake,
-    prediction_duration: pd.Timedelta = _ONE_DAY,
-    metric: Metric = metrics.mse,
+    prediction_duration_past: pd.Timedelta = _ONE_DAY,
+    prediction_duration_future: pd.Timedelta = None,
+    metric: Metric = metrics.coefficient_of_variation,
     transform: bool = False,
 ) -> PredictionEvaluations:
     """Run multiple forecasts and compare their accuracy."""
     train, actual = gathered_stats.split_after(
-        gathered_stats.end_time() - prediction_duration,
+        gathered_stats.end_time() - prediction_duration_past,
     )
+    n_pred: int = len(actual)
+    if prediction_duration_future:
+        n_pred += int(prediction_duration_future / gathered_stats.freq())
     if transform:
         forecasts = make_forecasts_ensure_positive(
-            train=train, n_pred=len(actual), predictions_to_make=predictions_to_make,
+            train=train, n_pred=n_pred, predictions_to_make=predictions_to_make,
         )
     else:
         forecasts = make_forecasts(
-            train=train, n_pred=len(actual), predictions_to_make=predictions_to_make,
+            train=train, n_pred=n_pred, predictions_to_make=predictions_to_make,
         )
     return PredictionEvaluations(
         predictions=forecasts,

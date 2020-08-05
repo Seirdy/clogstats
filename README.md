@@ -86,13 +86,13 @@ most active nicks for each channel.
 ### Time-series analysis and forecasting
 
 Time-series modelling and forecasting requires installation with the "forecasting"
-dependency. Forecasts are a work in progress; as of right now, they are still quite
-inaccurate.
+dependency. Forecasts are a work in progress; as of right now, they require a lot of
+tuning to be accurate.
 
-Charting channel activity in Matplotlib, comparing three different forecasts with the
+Charting channel activity in Matplotlib, comparing two different forecasts with the
 actual output:
 
-![Channel activity for \#linuxmasterrace](https://u.teknik.io/QMyrj.png)
+![Channel activity for quakenet.\#anime](https://u.teknik.io/JJbjl.png)
 
 ### Command-line stats aggregation
 
