@@ -63,9 +63,8 @@ def read_all_lines(path: Path) -> pd.DataFrame:
     # Rows with msgtype join/leave/action have nick as the first word of the msg body.
     logfile_df["nicks"] = logfile_df["prefixes"]
     logfile_df.loc[logfile_df["msg_types"] != "message", "nicks"] = None
-    logfile_df["nicks"] = logfile_df["nicks"].apply(
-        strip_nick_prefix,
-    )  # strip nick prefixes like "+", "@"
+    # strip nick prefixes (+Seirdy -> Seirdy, @Seirdy -> Seirdy, etc.)
+    logfile_df["nicks"] = logfile_df["nicks"].apply(strip_nick_prefix)
     # add nicks to msgtypes join, leave, and action
     is_join_leave_action: pd.Series = logfile_df["msg_types"].isin(
         {"join", "leave", "action"},
@@ -75,4 +74,8 @@ def read_all_lines(path: Path) -> pd.DataFrame:
         .apply(lambda body: body.split()[0])
         .str.replace(ANSI_ESCAPE, "")
     )
+    # discard message bodies since they won't be used again.
+    # this significantly improves memory usage when working with several logfiles
+    # at once
+    logfile_df.pop("bodies")
     return logfile_df
